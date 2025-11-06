@@ -11,7 +11,7 @@
     <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
 
     <style>
-        /* Gaya kustom (sama seperti sebelumnya) */
+        /* Gaya Kustom */
         .animate-fadeIn {
             animation: fadeIn 0.5s ease-out forwards;
             opacity: 0;
@@ -39,10 +39,10 @@
                 grid-template-columns: repeat(4, minmax(0, 1fr)); 
             }
         }
-        /* Pastikan adContainer berada di atas video player */
+        /* Ad Container harus berada di atas video player */
         #adContainer {
             z-index: 10; 
-            background: black; /* Latar belakang hitam saat iklan berjalan */
+            background: black; 
         }
     </style>
 </head>
@@ -120,7 +120,6 @@
         const pageInput = document.getElementById('pageInput');
         const goToPageButton = document.getElementById('goToPageButton');
 
-        // Elemen baru untuk iklan
         const adContainer = document.getElementById('adContainer');
 
         const PROXY_BASE_URL = "/thumbnail-proxy";
@@ -129,16 +128,15 @@
         let allVideos = [];
         let currentPage = 1;
 
-        // 3. PERUBAHAN UTAMA: MENGGUNAKAN URL IKLAN YANG ANDA BERIKAN
+        // URL VAST Tag Iklan KUSTOM
         const AD_TAG_URL = 'https://fastblow.com/d.mEFGzOd/G-NsvkZvGbUM/Yegmg9ruTZSUxlKkFPQTwYe2/OiTLYlyKOqD/g/tcNUjnYj5ANUj/IJ4VOmSpZvsQalWM1Op-dqD/0XxN';
 
         let adsLoader;
         let adsManager;
         
-        // --- FUNGSI IMA BARU UNTUK INISIALISASI IKLAN ---
+        // --- FUNGSI IMA (IKLAN) ---
         
         function initImaAds() {
-            // Sembunyikan ad container di awal
             adContainer.style.display = 'none';
 
             const adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoPlayer);
@@ -155,13 +153,11 @@
                 false
             );
 
-            // Inisialisasi Kontainer
             try {
                 adDisplayContainer.initialize();
                 requestAds();
             } catch (e) {
                 console.error("IMA AdDisplayContainer initialization failed:", e);
-                // Jika gagal, langsung putar video konten
                 videoPlayer.play(); 
             }
         }
@@ -187,12 +183,11 @@
             adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, onAdCompleted);
 
             try {
-                // Dimulai dengan init dan start iklan
                 adsManager.init(videoPlayer.clientWidth, videoPlayer.clientHeight, google.ima.ViewMode.NORMAL);
                 adsManager.start();
             } catch (adError) {
                 console.error("IMA AdsManager failed to start:", adError);
-                videoPlayer.play(); // Mainkan konten jika iklan gagal dimulai
+                videoPlayer.play(); 
             }
         }
 
@@ -201,28 +196,24 @@
             if (adsManager) {
                 adsManager.destroy();
             }
-            // Lanjutkan pemutaran konten utama
             onContentResumeRequested(); 
         }
 
         function onContentPauseRequested() {
-            // Iklan akan segera diputar. Jeda konten dan tampilkan kontainer iklan.
             videoPlayer.pause();
             adContainer.style.display = 'block';
         }
 
         function onContentResumeRequested() {
-            // Iklan selesai, sembunyikan kontainer iklan dan putar konten.
             adContainer.style.display = 'none';
             videoPlayer.play();
         }
         
         function onAdCompleted() {
-             // Pastikan konten diputar setelah semua iklan (pre-roll) selesai
             onContentResumeRequested();
         }
         
-        // --- FUNGSI PAGINASI (Tidak Berubah) ---
+        // --- FUNGSI PAGINASI ---
         
         function createVideoCardWithProxyThumbnail(videoData, index) {
              const PROXY_THUMBNAIL_URL = `${PROXY_BASE_URL}?url=${encodeURIComponent(videoData.url)}`;
@@ -257,7 +248,7 @@
             return card;
         }
 
-        function displayVideos(page, updateUrl = true) { // Tambah parameter updateUrl
+        function displayVideos(page, updateUrl = true) {
             const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
             
             if (page < 1) page = 1;
@@ -278,12 +269,10 @@
             
             renderPagination(totalPages);
             
-            // Update Info & Input
             infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, allVideos.length)} dari ${allVideos.length} video. (Halaman ${currentPage} dari ${totalPages})`;
             pageInput.value = currentPage; 
             pageInput.max = totalPages; 
 
-            // LOGIKA MEMPERBARUI URL UNTUK REFRESH
             if (updateUrl) {
                 const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
                 window.history.pushState({ path: newUrl }, '', newUrl);
@@ -297,15 +286,22 @@
             const prevButton = createPaginationButton('<i class="fas fa-angle-left"></i>', currentPage - 1, currentPage === 1);
             paginationContainer.appendChild(prevButton);
             
-            let startPage = Math.max(1, currentPage - 2);
-            let endPage = Math.min(totalPages, currentPage + 2);
-
-            if (endPage - startPage < 4) {
-                startPage = Math.max(1, endPage - 4);
+            // --- LOGIKA PAGINASI 3 ANGKA ---
+            let startPage = Math.max(1, currentPage - 1); // Mundur 1
+            let endPage = Math.min(totalPages, currentPage + 1); // Maju 1
+            
+            if (currentPage === 1 && totalPages >= 3) {
+                endPage = 3;
+            } else if (currentPage === totalPages && totalPages >= 3) {
+                startPage = totalPages - 2;
+            } else if (totalPages < 3) {
+                startPage = 1;
+                endPage = totalPages;
             }
-            if (endPage - startPage < 4) {
-                endPage = Math.min(totalPages, startPage + 4);
-            }
+            
+            if (startPage < 1) startPage = 1;
+            if (endPage > totalPages) endPage = totalPages;
+            // --- AKHIR LOGIKA PAGINASI 3 ANGKA ---
 
             for (let i = startPage; i <= endPage; i++) {
                 const pageButton = createPaginationButton(i, i, i === currentPage);
@@ -382,23 +378,21 @@
                 gallery.innerHTML = '<p class="text-red-500 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file videos.json ada.</p>';
             });
             
-        // --- LOGIKA MODAL DIMODIFIKASI UNTUK MEMANGGIL IKLAN ---
+        // --- LOGIKA MODAL ---
         gallery.addEventListener('click', (event) => {
             const card = event.target.closest('[data-url]');
             if (card) {
                 const videoUrl = card.dataset.url;
                 const videoTitle = card.dataset.title;
                 
-                // Set sumber video dan judul
                 videoPlayer.src = videoUrl;
                 modalTitle.textContent = videoTitle;
                 
-                // Tampilkan modal
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
                 document.body.classList.add('overflow-hidden');
                 
-                // Panggil fungsi inisialisasi iklan saat modal dibuka
+                // Panggil IMA SDK di sini
                 initImaAds(); 
             }
         });
@@ -407,7 +401,7 @@
             videoPlayer.pause();
             videoPlayer.src = ""; 
 
-            // Hancurkan Ads Manager dan Loader saat modal ditutup
+            // Bersihkan IMA SDK
             if (adsManager) {
                 adsManager.destroy();
                 adsManager = null;
