@@ -7,6 +7,9 @@
     <title>🎬 Galeri Video Responsif & Paginasi Input</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
+
     <style>
         /* Gaya kustom (sama seperti sebelumnya) */
         .animate-fadeIn {
@@ -23,8 +26,8 @@
         }
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr)); /* Default 2 kolom */
-            gap: 1.5rem; /* gap-6 */
+            grid-template-columns: repeat(2, minmax(0, 1fr)); 
+            gap: 1.5rem; 
         }
         @media (min-width: 768px) { 
             .video-grid {
@@ -35,6 +38,11 @@
             .video-grid {
                 grid-template-columns: repeat(4, minmax(0, 1fr)); 
             }
+        }
+        /* Pastikan adContainer berada di atas video player */
+        #adContainer {
+            z-index: 10; 
+            background: black; /* Latar belakang hitam saat iklan berjalan */
         }
     </style>
 </head>
@@ -91,9 +99,11 @@
             </button>
             <h2 id="modalTitle" class="text-xl font-bold mb-3 text-gray-800"></h2>
             <div class="video-aspect-ratio">
-                <video id="videoPlayer" controls autoplay class="absolute top-0 left-0 w-full h-full bg-black rounded-lg" poster="">
+                <video id="videoPlayer" controls class="absolute top-0 left-0 w-full h-full bg-black rounded-lg" poster="">
                     Browser Anda tidak mendukung tag video.
                 </video>
+                
+                <div id="adContainer" class="absolute top-0 left-0 w-full h-full"></div>
             </div>
         </div>
     </div>
@@ -110,16 +120,112 @@
         const pageInput = document.getElementById('pageInput');
         const goToPageButton = document.getElementById('goToPageButton');
 
+        // Elemen baru untuk iklan
+        const adContainer = document.getElementById('adContainer');
+
         const PROXY_BASE_URL = "/thumbnail-proxy";
         const VIDEOS_PER_PAGE = 8; 
 
         let allVideos = [];
         let currentPage = 1;
 
-        // --- FUNGSI UTAMA PAGINASI & TAMPILAN ---
+        // 3. PERUBAHAN UTAMA: MENGGUNAKAN URL IKLAN YANG ANDA BERIKAN
+        const AD_TAG_URL = 'https://fastblow.com/d.mEFGzOd/G-NsvkZvGbUM/Yegmg9ruTZSUxlKkFPQTwYe2/OiTLYlyKOqD/g/tcNUjnYj5ANUj/IJ4VOmSpZvsQalWM1Op-dqD/0XxN';
 
+        let adsLoader;
+        let adsManager;
+        
+        // --- FUNGSI IMA BARU UNTUK INISIALISASI IKLAN ---
+        
+        function initImaAds() {
+            // Sembunyikan ad container di awal
+            adContainer.style.display = 'none';
+
+            const adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoPlayer);
+            adsLoader = new google.ima.AdsLoader(adDisplayContainer);
+            
+            adsLoader.addEventListener(
+                google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
+                onAdsManagerLoaded,
+                false
+            );
+            adsLoader.addEventListener(
+                google.ima.AdErrorEvent.Type.AD_ERROR,
+                onAdError,
+                false
+            );
+
+            // Inisialisasi Kontainer
+            try {
+                adDisplayContainer.initialize();
+                requestAds();
+            } catch (e) {
+                console.error("IMA AdDisplayContainer initialization failed:", e);
+                // Jika gagal, langsung putar video konten
+                videoPlayer.play(); 
+            }
+        }
+
+        function requestAds() {
+            const adsRequest = new google.ima.AdsRequest();
+            adsRequest.adTagUrl = AD_TAG_URL;
+            adsRequest.linearAdSlotWidth = videoPlayer.clientWidth;
+            adsRequest.linearAdSlotHeight = videoPlayer.clientHeight;
+            
+            adsLoader.requestAds(adsRequest);
+        }
+        
+        function onAdsManagerLoaded(adsManagerLoadedEvent) {
+            const adsRenderingSettings = new google.ima.AdsRenderingSettings();
+            adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
+
+            adsManager = adsManagerLoadedEvent.getAdsManager(videoPlayer, adsRenderingSettings);
+
+            adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError);
+            adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, onContentPauseRequested);
+            adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, onContentResumeRequested);
+            adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, onAdCompleted);
+
+            try {
+                // Dimulai dengan init dan start iklan
+                adsManager.init(videoPlayer.clientWidth, videoPlayer.clientHeight, google.ima.ViewMode.NORMAL);
+                adsManager.start();
+            } catch (adError) {
+                console.error("IMA AdsManager failed to start:", adError);
+                videoPlayer.play(); // Mainkan konten jika iklan gagal dimulai
+            }
+        }
+
+        function onAdError(adErrorEvent) {
+            console.error("Ad Error:", adErrorEvent.getError().getMessage());
+            if (adsManager) {
+                adsManager.destroy();
+            }
+            // Lanjutkan pemutaran konten utama
+            onContentResumeRequested(); 
+        }
+
+        function onContentPauseRequested() {
+            // Iklan akan segera diputar. Jeda konten dan tampilkan kontainer iklan.
+            videoPlayer.pause();
+            adContainer.style.display = 'block';
+        }
+
+        function onContentResumeRequested() {
+            // Iklan selesai, sembunyikan kontainer iklan dan putar konten.
+            adContainer.style.display = 'none';
+            videoPlayer.play();
+        }
+        
+        function onAdCompleted() {
+             // Pastikan konten diputar setelah semua iklan (pre-roll) selesai
+            onContentResumeRequested();
+        }
+        
+        // --- FUNGSI PAGINASI (Tidak Berubah) ---
+        
         function createVideoCardWithProxyThumbnail(videoData, index) {
-            const PROXY_THUMBNAIL_URL = `${PROXY_BASE_URL}?url=${encodeURIComponent(videoData.url)}`;
+             const PROXY_THUMBNAIL_URL = `${PROXY_BASE_URL}?url=${encodeURIComponent(videoData.url)}`;
             const card = document.createElement('div');
             
             card.className = 'group bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn';
@@ -177,7 +283,7 @@
             pageInput.value = currentPage; 
             pageInput.max = totalPages; 
 
-            // --- LOGIKA UTAMA: MEMPERBARUI URL UNTUK REFRESH ---
+            // LOGIKA MEMPERBARUI URL UNTUK REFRESH
             if (updateUrl) {
                 const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
                 window.history.pushState({ path: newUrl }, '', newUrl);
@@ -229,15 +335,11 @@
             return button;
         }
         
-        // --- LOGIKA INPUT DAN MEMBACA URL ---
-        
-        // Fungsi untuk mendapatkan halaman dari URL (jika ada)
         function getPageFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const pageParam = urlParams.get('page');
             const pageNumber = parseInt(pageParam);
             
-            // Kembalikan nomor halaman yang valid atau 1 sebagai default
             return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
         }
         
@@ -263,15 +365,14 @@
         });
 
 
-        // --- LOAD DATA AWAL DIMODIFIKASI ---
+        // --- LOAD DATA AWAL ---
         fetch('videos.json')
             .then(res => res.json())
             .then(data => {
                 allVideos = data.videos;
                 if (allVideos && allVideos.length > 0) {
-                    // Gunakan halaman dari URL saat memuat data pertama kali
                     const initialPage = getPageFromUrl();
-                    displayVideos(initialPage, false); // displayVideos(halaman_saat_refresh, jangan_update_history)
+                    displayVideos(initialPage, false); 
                 } else {
                     gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-500">Tidak ada video ditemukan.</p>';
                 }
@@ -281,26 +382,42 @@
                 gallery.innerHTML = '<p class="text-red-500 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file videos.json ada.</p>';
             });
             
-        // --- Logika Modal (Tidak Berubah) ---
+        // --- LOGIKA MODAL DIMODIFIKASI UNTUK MEMANGGIL IKLAN ---
         gallery.addEventListener('click', (event) => {
             const card = event.target.closest('[data-url]');
             if (card) {
                 const videoUrl = card.dataset.url;
                 const videoTitle = card.dataset.title;
                 
+                // Set sumber video dan judul
                 videoPlayer.src = videoUrl;
                 modalTitle.textContent = videoTitle;
                 
+                // Tampilkan modal
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
-                
                 document.body.classList.add('overflow-hidden');
+                
+                // Panggil fungsi inisialisasi iklan saat modal dibuka
+                initImaAds(); 
             }
         });
 
         function closeModal() {
             videoPlayer.pause();
             videoPlayer.src = ""; 
+
+            // Hancurkan Ads Manager dan Loader saat modal ditutup
+            if (adsManager) {
+                adsManager.destroy();
+                adsManager = null;
+            }
+            if (adsLoader) {
+                adsLoader = null;
+            }
+            adContainer.style.display = 'none';
+            adContainer.innerHTML = ''; 
+
             modal.classList.remove('flex');
             modal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
