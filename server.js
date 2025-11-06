@@ -1,115 +1,171 @@
-// server-ffmpeg.js atau api/thumbnail-proxy.js
+import express from "express";
+import fetch from "node-fetch";
+import fs from "fs";
+import path from "path";
+import { fileURLToPath } from "url";
 
-const express = require('express');
-// Hapus 'const ffmpeg = require('fluent-ffmpeg');' karena tidak dipakai lagi
-const path = require('path'); 
 const app = express();
-const PORT = 3000;
+app.use(express.json());
 
-// --- KONFIGURASI API EKSTERNAL ---
-// Ganti URL endpoint sesuai dokumentasi resmi API Anda
-const FFMPEG_API_URL_START = 'https://api.ffmpeg-api.com/ffmpeg/process'; 
-const API_KEY = 'SGxISW10ZHVmaDY2QlJMNnRDa0k6MTYxNDNkYjc5ODg2YjY2YjhlY2ZiN2Q4'; 
-// Catatan: Gunakan process.env.FFMPEG_API_KEY saat deployment Vercel!
-// ---------------------------------
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json()); // Penting untuk menangani body JSON jika ada permintaan POST lain
+// === KONFIGURASI ===
+const API_KEY = "SGxISW10ZHVmaDY2QlJMNnRDa0k6MTYxNDNkYjc5ODg2YjY2YjhlY2ZiN2Q4";
+const BASE_URL = "https://api.ffmpeg-api.com";
+const MAX_RETRY = 5;
+const RETRY_DELAY = 2000;
 
-// Middleware CORS
+// === Helper delay ===
+const delay = (ms) => new Promise((r) => setTimeout(r, ms));
+
+// === CORS ===
 app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*'); 
-    res.header('Access-Control-Allow-Methods', 'GET, OPTIONS, POST'); // Tambah POST
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization'); // Tambah Authorization
-    next();
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "GET, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization");
+  if (req.method === "OPTIONS") return res.sendStatus(200);
+  next();
 });
 
-// Endpoint untuk static file (jika Anda memiliki index.html)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 app.use(express.static(path.join(__dirname, 'public')));
 app.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
 });
 
-// 📸 Endpoint Proxy Thumbnail
-app.get('/thumbnail-proxy', async (req, res) => {
-    const videoURL = req.query.url;
+// === Buat directory kerja di FFmpeg API ===
+async function createDirectory() {
+  const res = await fetch(`${BASE_URL}/directory`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ ttl: 3600 }), // berlaku 1 jam
+  });
 
-    if (!videoURL) {
-        return res.status(400).send('Parameter URL video (?url=...) tidak ditemukan.');
-    }
+  if (!res.ok) throw new Error("Gagal membuat directory.");
+  const data = await res.json();
+  return data.directory.id;
+}
 
+// === Daftarkan file ke directory ===
+async function registerFile(dirId, fileName) {
+  const res = await fetch(`${BASE_URL}/file`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({ file_name: fileName, dir_id: dirId }),
+  });
+
+  if (!res.ok) throw new Error("Gagal mendaftarkan file.");
+  const data = await res.json();
+  return data.upload.url; // URL PUT upload
+}
+
+// === Upload file video ===
+async function uploadFile(uploadUrl, videoBuffer) {
+  const res = await fetch(uploadUrl, {
+    method: "PUT",
+    body: videoBuffer,
+  });
+  if (!res.ok) throw new Error("Gagal upload file ke FFmpeg API.");
+}
+
+// === Proses thumbnail ===
+async function processThumbnail(dirId, fileName) {
+  const res = await fetch(`${BASE_URL}/ffmpeg/process`, {
+    method: "POST",
+    headers: {
+      Authorization: `Basic ${API_KEY}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      task: {
+        inputs: [
+          {
+            file_path: `${dirId}/${fileName}`,
+            options: ["-ss", "1"],
+          },
+        ],
+        outputs: [
+          {
+            file: "thumbnail.jpg",
+            options: ["-vframes", "1", "-s", "640x360"],
+          },
+        ],
+      },
+    }),
+  });
+
+  if (!res.ok) throw new Error("Gagal memproses thumbnail.");
+  const data = await res.json();
+  return data.result?.[0]?.download_url;
+}
+
+// === Retry logic untuk menghindari rate limit ===
+async function withRetry(fn, maxRetries = MAX_RETRY) {
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
-        console.log(`[PROXY] Menerima permintaan untuk memproses: ${videoURL}`);
-
-        // --- LANGKAH 1: MEMULAI TUGAS FFMPEG DI API EKSTERNAL ---
-        const taskResponse = await fetch(FFMPEG_API_URL_START, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${API_KEY}` 
-            },
-            body: JSON.stringify({
-                task: {
-                    inputs: [{ 
-                        // 💡 MENGGUNAKAN 'url' BUKAN 'source'
-                        url: videoURL 
-                    }], 
-                    outputs: [{
-                        commands: [
-                            "-ss 00:00:01", // Ambil frame di detik ke-1
-                            "-vframes 1",  // Hanya 1 frame
-                            "-s 640x360",  // Ubah ukuran
-                            "output.jpg"   // Nama file output
-                        ]
-                    }]
-                }
-            })
-        });
-
-        if (!taskResponse.ok) {
-            const errorText = await taskResponse.text();
-            throw new Error(`FFmpeg Service gagal (Status: ${taskResponse.status}). Detail: ${errorText.substring(0, 100)}`);
-        }
-
-        const taskResult = await taskResponse.json();
-        
-        // Asumsi: Ambil URL hasil dari respons JSON
-        const thumbnailDownloadUrl = taskResult.output_url || taskResult.url; 
-        
-        if (!thumbnailDownloadUrl) {
-             // Jika API mengembalikan data tugas, tapi belum selesai.
-             throw new Error("FFmpeg Service berhasil, namun belum menyediakan URL download hasil atau tugas masih diproses.");
-        }
-        
-        console.log(`[PROXY] Tugas berhasil. Mengambil thumbnail dari: ${thumbnailDownloadUrl}`);
-
-        // --- LANGKAH 2: MENGAMBIL FILE THUMBNAIL HASIL ---
-        const finalImageResponse = await fetch(thumbnailDownloadUrl);
-
-        if (!finalImageResponse.ok) {
-            throw new Error(`Gagal mengambil file thumbnail hasil. Status: ${finalImageResponse.status}`);
-        }
-
-        // 3. Set Header dan Pipe Hasil
-        res.setHeader('Content-Type', 'image/jpeg');
-        res.setHeader('Cache-Control', 'public, max-age=86400, must-revalidate');
-        
-        // Pipe stream dari gambar ke respons klien
-        finalImageResponse.body.pipe(res); 
-
-        console.log('[PROXY] Thumbnail selesai di-stream ke klien.');
-
+      return await fn();
     } catch (err) {
-        console.error(`[ERROR] Gagal memproses: ${err.message}`);
-        if (!res.headersSent) {
-            res.status(500).send(`Gagal memproses thumbnail. Error: ${err.message}`);
-        }
+      console.warn(`[RETRY ${attempt}/${maxRetries}] ${err.message}`);
+      if (attempt === maxRetries) throw err;
+      await delay(RETRY_DELAY);
     }
+  }
+}
+
+// === Endpoint utama ===
+app.get("/thumbnail-proxy", async (req, res) => {
+  const videoUrl = req.query.url;
+  if (!videoUrl) {
+    return res.status(400).json({ error: "Parameter ?url= wajib diisi." });
+  }
+
+  try {
+    console.log(`[THUMBNAIL] Memproses video dari ${videoUrl}`);
+    const tempFile = path.join("/tmp", `video-${Date.now()}.mp4`);
+
+    // 1️⃣ Unduh video ke memori
+    const videoRes = await fetch(videoUrl);
+    if (!videoRes.ok) throw new Error("Gagal mengunduh video dari sumber.");
+    const videoBuffer = Buffer.from(await videoRes.arrayBuffer());
+
+    // 2️⃣ Buat direktori kerja
+    const dirId = await withRetry(() => createDirectory());
+
+    // 3️⃣ Daftarkan file di FFmpeg API
+    const uploadUrl = await withRetry(() => registerFile(dirId, "video.mp4"));
+
+    // 4️⃣ Upload file
+    await withRetry(() => uploadFile(uploadUrl, videoBuffer));
+
+    // 5️⃣ Proses thumbnail
+    const thumbUrl = await withRetry(() => processThumbnail(dirId, "video.mp4"));
+
+    if (!thumbUrl) throw new Error("Thumbnail gagal diproses.");
+
+    // 6️⃣ Ambil hasil thumbnail
+    const imageRes = await fetch(thumbUrl);
+    if (!imageRes.ok) throw new Error("Gagal mengambil hasil thumbnail.");
+
+    res.setHeader("Content-Type", "image/jpeg");
+    res.setHeader("Cache-Control", "public, max-age=86400, immutable");
+    imageRes.body.pipe(res);
+  } catch (err) {
+    console.error("[ERROR]", err.message);
+    if (!res.headersSent)
+      res.status(500).json({ error: "Gagal memproses thumbnail", detail: err.message });
+  }
 });
 
-// Jalankan Server (Hanya untuk local development)
 app.listen(PORT, () => {
-    console.log(`Server lokal berjalan di http://localhost:${PORT}`);
+  console.log(`✅ Server berjalan di http://localhost:${PORT}`);
 });
 
-// 🌐 Ekspor app untuk Vercel Serverless Function
-module.exports = app;
+export default app;
