@@ -1,13 +1,32 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="856cde973fd701ac6797fa601174d75e9ce3c603" content="856cde973fd701ac6797fa601174d75e9ce3c603" />
-    <title>🎬 Galeri Video Responsif & Paginasi Input</title>
+    <title>King Bokep</title>
+    <meta name="author" content="King Bokep" />
+    <meta property="og:site_name" content="King Bokep" />
+    <meta name="keywords"
+        content="vidio bokep, vidio viral, vidio indoviral, bokep terbaru, bokep viral, bokep indoviral, vidio bokep terbaru, vidio bokep viral, vidio bokep indoviral, koleksi vidio bokep, galeri vidio bokep, kumpulan vidio bokep, streaming vidio bokep, download vidio bokep, nonton vidio bokep, vidio dewasa, vidio 18+, vidio hot, vidio seksi, vidio panas" />
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    
+    <meta property="og:title" content="King Bokep" />
+    <meta property="og:description" content="Tonton Vidio Viral Bokep Terbaru Dari Videy." />
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://videyindoviral.vercel.app/" />
+    <meta property="og:image" content="https://videyindoviral.vercel.app/public/logo.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:locale" content="id_ID" />
+
+    <link rel="icon" type="image/png" sizes="192x192" href="/public/logo.png">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="King Bokep">
+    <meta name="twitter:description" content="Tonton Vidio Viral Bokep Terbaru Dari Videy.">
+    <meta name="twitter:image" content="https://videyindoviral.vercel.app/public/logo.png">
     <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
 
     <style>
@@ -16,93 +35,109 @@
             animation: fadeIn 0.5s ease-out forwards;
             opacity: 0;
         }
+
         @keyframes fadeIn {
-            to { opacity: 1; }
+            to {
+                opacity: 1;
+            }
         }
+
         .video-aspect-ratio {
-            padding-bottom: 56.25%; /* 16:9 ratio */
+            padding-bottom: 56.25%;
+            /* 16:9 ratio */
             height: 0;
             position: relative;
         }
+
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr)); 
-            gap: 1.5rem; 
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
         }
-        @media (min-width: 768px) { 
+
+        @media (min-width: 768px) {
             .video-grid {
-                grid-template-columns: repeat(3, minmax(0, 1fr)); 
+                grid-template-columns: repeat(3, minmax(0, 1fr));
             }
         }
-        @media (min-width: 1024px) { 
+
+        @media (min-width: 1024px) {
             .video-grid {
-                grid-template-columns: repeat(4, minmax(0, 1fr)); 
+                grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
+
         /* Ad Container harus berada di atas video player */
         #adContainer {
-            z-index: 10; 
-            background: black; 
+            z-index: 10;
+            background: black;
         }
     </style>
 </head>
-<body class="bg-gray-50 text-gray-800">
 
-    <header class="bg-white shadow-md fixed w-full z-10">
+<body class="bg-gray-900 text-gray-100">
+
+    <header class="bg-gray-800 shadow-md fixed w-full z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <h1 class="text-2xl font-bold text-indigo-600">Video Gallery 📱</h1>
+
+            <a href="/" class="flex items-center space-x-2">
+                <img src="/public/logo1.png" alt="Logo King Bokep - Mahkota K" class="h-12 w-12 object-contain">
+                <h1 class="text-2xl font-bold text-blue-400">King Bokep</h1>
+            </a>
+
             <nav class="hidden md:block">
-                <a href="#" class="text-gray-600 hover:text-indigo-600 mx-3 transition">Home</a>
-                <a href="#" class="text-gray-600 hover:text-indigo-600 mx-3 transition">Tentang</a>
+                <a href="#" class="text-gray-300 hover:text-blue-400 mx-3 transition">Home</a>
+                <a href="#" class="text-gray-300 hover:text-blue-400 mx-3 transition">Tentang</a>
             </nav>
         </div>
     </header>
 
-    <main class="p-4 md:p-8 pt-24"> 
+    <main class="p-4 md:p-8 pt-24">
         <header class="mb-10 text-center">
-            <h1 class="text-4xl font-extrabold text-indigo-700 mb-2 tracking-tight">
-                Koleksi Video Responsif
-            </h1>
-            <p class="text-gray-500 italic">Tampilan 2 kolom di ponsel, paginasi input aktif.</p>
+            <h2 class="text-3xl font-extrabold text-blue-300 mb-2">Galeri Vidio Bokep Viral Terbaru</h2>
+            <p class="text-gray-400">Temukan koleksi vidio bokep viral terbaru dari Videy.</p>
         </header>
 
         <div class="max-w-7xl mx-auto">
             <div class="video-grid" id="videoGallery">
-                </div>
-            
+            </div>
+
             <div class="mt-10 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
                 <div id="paginationContainer" class="flex justify-center space-x-2">
-                    </div>
+                </div>
 
                 <div class="flex items-center space-x-2">
-                    <label for="pageInput" class="text-gray-600 font-medium whitespace-nowrap">Lompat ke:</label>
-                    <input type="number" id="pageInput" 
-                           class="w-20 px-3 py-2 border border-gray-300 rounded-lg text-center focus:ring-indigo-500 focus:border-indigo-500" 
-                           min="1" value="1">
-                    <button id="goToPageButton" 
-                            class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition duration-300">
+                    <label for="pageInput" class="text-gray-300 font-medium whitespace-nowrap">Lompat ke:</label>
+                    <input type="number" id="pageInput"
+                        class="w-20 px-3 py-2 border border-gray-600 rounded-lg text-center focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-gray-100"
+                        min="1" value="1">
+                    <button id="goToPageButton"
+                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition duration-300">
                         Go
                     </button>
                 </div>
             </div>
-            
-            <p id="infoPaginasi" class="text-center text-sm text-gray-500 mt-4"></p>
+
+            <p id="infoPaginasi" class="text-center text-sm text-gray-400 mt-4"></p>
         </div>
     </main>
 
-    <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 transition-opacity duration-300" 
-         role="dialog" aria-modal="true">
-        <div class="bg-white rounded-lg shadow-2xl w-full max-w-4xl m-4 relative p-4">
-            <button id="closeModal" class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full p-2 w-8 h-8 flex items-center justify-center shadow-lg hover:bg-red-700 transition"
-                    aria-label="Tutup Modal">
+    <div id="videoModal"
+        class="fixed inset-0 bg-black bg-opacity-75 hidden items-center justify-center z-50 transition-opacity duration-300"
+        role="dialog" aria-modal="true">
+        <div class="bg-gray-800 rounded-lg shadow-2xl w-full max-w-4xl m-4 relative p-4">
+            <button id="closeModal"
+                class="absolute -top-3 -right-3 bg-red-600 text-white rounded-full p-2 w-8 h-8 flex items-center justify-center shadow-lg hover:bg-red-700 transition"
+                aria-label="Tutup Modal">
                 <i class="fas fa-times text-sm"></i>
             </button>
-            <h2 id="modalTitle" class="text-xl font-bold mb-3 text-gray-800"></h2>
+            <h2 id="modalTitle" class="text-xl font-bold mb-3 text-gray-100"></h2>
             <div class="video-aspect-ratio">
-                <video id="videoPlayer" controls class="absolute top-0 left-0 w-full h-full bg-black rounded-lg" poster="">
+                <video id="videoPlayer" controls class="absolute top-0 left-0 w-full h-full bg-black rounded-lg"
+                    poster="">
                     Browser Anda tidak mendukung tag video.
                 </video>
-                
+
                 <div id="adContainer" class="absolute top-0 left-0 w-full h-full"></div>
             </div>
         </div>
@@ -116,14 +151,14 @@
         const closeModalButton = document.getElementById('closeModal');
         const videoPlayer = document.getElementById('videoPlayer');
         const modalTitle = document.getElementById('modalTitle');
-        
+
         const pageInput = document.getElementById('pageInput');
         const goToPageButton = document.getElementById('goToPageButton');
 
         const adContainer = document.getElementById('adContainer');
 
         const PROXY_BASE_URL = "/thumbnail-proxy";
-        const VIDEOS_PER_PAGE = 8; 
+        const VIDEOS_PER_PAGE = 8;
 
         let allVideos = [];
         let currentPage = 1;
@@ -133,15 +168,15 @@
 
         let adsLoader;
         let adsManager;
-        
+
         // --- FUNGSI IMA (IKLAN) ---
-        
+
         function initImaAds() {
             adContainer.style.display = 'none';
 
             const adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoPlayer);
             adsLoader = new google.ima.AdsLoader(adDisplayContainer);
-            
+
             adsLoader.addEventListener(
                 google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
                 onAdsManagerLoaded,
@@ -158,7 +193,7 @@
                 requestAds();
             } catch (e) {
                 console.error("IMA AdDisplayContainer initialization failed:", e);
-                videoPlayer.play(); 
+                videoPlayer.play();
             }
         }
 
@@ -167,10 +202,10 @@
             adsRequest.adTagUrl = AD_TAG_URL;
             adsRequest.linearAdSlotWidth = videoPlayer.clientWidth;
             adsRequest.linearAdSlotHeight = videoPlayer.clientHeight;
-            
+
             adsLoader.requestAds(adsRequest);
         }
-        
+
         function onAdsManagerLoaded(adsManagerLoadedEvent) {
             const adsRenderingSettings = new google.ima.AdsRenderingSettings();
             adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
@@ -187,7 +222,7 @@
                 adsManager.start();
             } catch (adError) {
                 console.error("IMA AdsManager failed to start:", adError);
-                videoPlayer.play(); 
+                videoPlayer.play();
             }
         }
 
@@ -196,7 +231,7 @@
             if (adsManager) {
                 adsManager.destroy();
             }
-            onContentResumeRequested(); 
+            onContentResumeRequested();
         }
 
         function onContentPauseRequested() {
@@ -208,29 +243,29 @@
             adContainer.style.display = 'none';
             videoPlayer.play();
         }
-        
+
         function onAdCompleted() {
             onContentResumeRequested();
         }
-        
+
         // --- FUNGSI PAGINASI ---
-        
+
         function createVideoCardWithProxyThumbnail(videoData, index) {
-             const PROXY_THUMBNAIL_URL = `${PROXY_BASE_URL}?url=${encodeURIComponent(videoData.url)}`;
+            const PROXY_THUMBNAIL_URL = `${PROXY_BASE_URL}?url=${encodeURIComponent(videoData.url)}`;
             const card = document.createElement('div');
-            
-            card.className = 'group bg-white rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl hover:scale-[1.01] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn';
-            card.style.animationDelay = `${index * 0.05}s`; 
-            card.dataset.url = videoData.url; 
+
+            card.className = 'group bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn';
+            card.style.animationDelay = `${index * 0.05}s`;
+            card.dataset.url = videoData.url;
             card.dataset.title = videoData.title;
 
             card.innerHTML = `
-                <div class="relative video-aspect-ratio bg-gray-200 flex items-center justify-center"> 
+                <div class="relative video-aspect-ratio bg-gray-700 flex items-center justify-center"> 
                     <img src="${PROXY_THUMBNAIL_URL}" 
-                         class="w-full h-full object-cover absolute top-0 left-0" 
-                         style="border-radius: 16px 16px 0 0;"
-                         loading="lazy" 
-                         onerror="this.onerror=null; this.src='https://via.placeholder.com/640x360.png?text=Failed';">
+                            class="w-full h-full object-cover absolute top-0 left-0" 
+                            style="border-radius: 16px 16px 0 0;"
+                            loading="lazy" 
+                            onerror="this.onerror=null; this.src='https://via.placeholder.com/640x360.png?text=Failed';">
                     
                     <div class="absolute inset-0 flex items-center justify-center 
                         bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 
@@ -239,8 +274,8 @@
                     </div>
                 </div>
                 <div class="p-3 text-center">
-                    <h3 class="text-base font-semibold text-gray-900 mt-1 truncate">${videoData.title}</h3>
-                    <div class="text-xs text-gray-500 mt-1">
+                    <h3 class="text-base font-semibold text-gray-100 mt-1 truncate">${videoData.title}</h3>
+                    <div class="text-xs text-gray-400 mt-1">
                         <i class="far fa-clock mr-1"></i> ${Math.floor(Math.random() * 5) + 1} menit
                     </div>
                 </div>
@@ -250,13 +285,13 @@
 
         function displayVideos(page, updateUrl = true) {
             const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
-            
+
             if (page < 1) page = 1;
             if (page > totalPages) page = totalPages;
-            
+
             currentPage = page;
-            gallery.innerHTML = ''; 
-            window.scrollTo({ top: 0, behavior: 'smooth' }); 
+            gallery.innerHTML = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
 
             const startIndex = (page - 1) * VIDEOS_PER_PAGE;
             const endIndex = startIndex + VIDEOS_PER_PAGE;
@@ -266,12 +301,12 @@
                 const card = createVideoCardWithProxyThumbnail(v, index);
                 gallery.appendChild(card);
             });
-            
+
             renderPagination(totalPages);
-            
+
             infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, allVideos.length)} dari ${allVideos.length} video. (Halaman ${currentPage} dari ${totalPages})`;
-            pageInput.value = currentPage; 
-            pageInput.max = totalPages; 
+            pageInput.value = currentPage;
+            pageInput.max = totalPages;
 
             if (updateUrl) {
                 const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
@@ -280,16 +315,16 @@
         }
 
         function renderPagination(totalPages) {
-            paginationContainer.innerHTML = ''; 
+            paginationContainer.innerHTML = '';
             if (totalPages <= 1) return;
 
             const prevButton = createPaginationButton('<i class="fas fa-angle-left"></i>', currentPage - 1, currentPage === 1);
             paginationContainer.appendChild(prevButton);
-            
+
             // --- LOGIKA PAGINASI 3 ANGKA ---
             let startPage = Math.max(1, currentPage - 1); // Mundur 1
             let endPage = Math.min(totalPages, currentPage + 1); // Maju 1
-            
+
             if (currentPage === 1 && totalPages >= 3) {
                 endPage = 3;
             } else if (currentPage === totalPages && totalPages >= 3) {
@@ -298,7 +333,7 @@
                 startPage = 1;
                 endPage = totalPages;
             }
-            
+
             if (startPage < 1) startPage = 1;
             if (endPage > totalPages) endPage = totalPages;
             // --- AKHIR LOGIKA PAGINASI 3 ANGKA ---
@@ -314,31 +349,31 @@
 
         function createPaginationButton(text, pageNumber, isActive = false) {
             const button = document.createElement('button');
-            button.innerHTML = text; 
-            
+            button.innerHTML = text;
+
             const baseClasses = 'px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center justify-center';
-            
+
             if (isActive) {
                 button.className = `${baseClasses} bg-indigo-600 text-white shadow-md`;
             } else if (pageNumber < 1 || pageNumber > Math.ceil(allVideos.length / VIDEOS_PER_PAGE)) {
-                button.className = `${baseClasses} bg-gray-200 text-gray-500 cursor-not-allowed`;
+                button.className = `${baseClasses} bg-gray-700 text-gray-500 cursor-not-allowed`;
                 button.disabled = true;
             } else {
-                button.className = `${baseClasses} bg-white border border-gray-300 text-gray-700 hover:bg-gray-100`;
+                button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600`;
                 button.onclick = () => displayVideos(pageNumber);
             }
 
             return button;
         }
-        
+
         function getPageFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const pageParam = urlParams.get('page');
             const pageNumber = parseInt(pageParam);
-            
+
             return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
         }
-        
+
         function goToPageFromInput() {
             let page = parseInt(pageInput.value);
             const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
@@ -348,12 +383,12 @@
             } else if (page > totalPages) {
                 page = totalPages;
             }
-            
+
             displayVideos(page);
         }
 
         goToPageButton.addEventListener('click', goToPageFromInput);
-        
+
         pageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
                 goToPageFromInput();
@@ -368,38 +403,38 @@
                 allVideos = data.videos;
                 if (allVideos && allVideos.length > 0) {
                     const initialPage = getPageFromUrl();
-                    displayVideos(initialPage, false); 
+                    displayVideos(initialPage, false);
                 } else {
-                    gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-500">Tidak ada video ditemukan.</p>';
+                    gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
                 }
             })
             .catch(error => {
                 console.error('Gagal memuat videos.json:', error);
-                gallery.innerHTML = '<p class="text-red-500 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file videos.json ada.</p>';
+                gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file videos.json ada.</p>';
             });
-            
+
         // --- LOGIKA MODAL ---
         gallery.addEventListener('click', (event) => {
             const card = event.target.closest('[data-url]');
             if (card) {
                 const videoUrl = card.dataset.url;
                 const videoTitle = card.dataset.title;
-                
+
                 videoPlayer.src = videoUrl;
                 modalTitle.textContent = videoTitle;
-                
+
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
                 document.body.classList.add('overflow-hidden');
-                
+
                 // Panggil IMA SDK di sini
-                initImaAds(); 
+                initImaAds();
             }
         });
 
         function closeModal() {
             videoPlayer.pause();
-            videoPlayer.src = ""; 
+            videoPlayer.src = "";
 
             // Bersihkan IMA SDK
             if (adsManager) {
@@ -410,7 +445,7 @@
                 adsLoader = null;
             }
             adContainer.style.display = 'none';
-            adContainer.innerHTML = ''; 
+            adContainer.innerHTML = '';
 
             modal.classList.remove('flex');
             modal.classList.add('hidden');
@@ -418,11 +453,16 @@
         }
 
         closeModalButton.addEventListener('click', closeModal);
+
+        // MODIFIKASI: Menghapus event listener untuk klik backdrop (event.target === modal)
+        /*
         modal.addEventListener('click', (event) => {
             if (event.target === modal) {
                 closeModal();
             }
         });
+        */
+
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && modal.classList.contains('flex')) {
                 closeModal();
@@ -430,4 +470,5 @@
         });
     </script>
 </body>
+
 </html>
