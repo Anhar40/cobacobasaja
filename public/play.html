@@ -6,6 +6,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">King Bokep | Tonton Video</title>
     
+    <meta property="og:site_name" content="KING BOKEP">
+    <meta property="og:type" content="video.other">
+    
+    <meta id="ogTitle" property="og:title" content="King Bokep | Tonton Video">
+    <meta id="ogUrl" property="og:url" content="">
+    <meta id="ogDescription" property="og:description" content="Tonton koleksi video premium terbaru di King Bokep.">
+    <meta id="ogImage" property="og:image" content="https://videyindoviral.vercel.app/logo1.png">
+    
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="King Bokep | Tonton Video">
+    <meta name="twitter:description" content="Tonton koleksi video premium terbaru di King Bokep.">
+    <meta name="twitter:image" content="https://videyindoviral.vercel.app/logo1.png">
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -108,26 +120,23 @@
         </div>
     </footer>
     <script>
-        // *** PERUBAHAN DI SINI: Menyimpan URL dalam Array ***
+        // Fungsionalitas Iklan (Dipilih secara acak, TIDAK BERUBAH)
         const AD_TAG_URLS = [
             'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj', 
             'https://sardineoctoberconnecting.com/k17qp7n4r?key=7833125c99e2574000255bd7ba693d08'
         ];
         
         function triggerRedirectAd() {
-            // *** PERUBAHAN DI SINI: Memilih URL secara acak ***
             const randomIndex = Math.floor(Math.random() * AD_TAG_URLS.length);
             const randomUrl = AD_TAG_URLS[randomIndex];
 
             const newWindow = window.open(randomUrl, '_blank');
             
-            // Hapus listener setelah terpicu agar hanya terpicu sekali per pemutaran
             document.getElementById('videoPlayer').removeEventListener('play', triggerRedirectAd);
             
             if (newWindow) { newWindow.blur(); window.focus(); }
         }
         
-        // Logika Asli: REDIRECT IKLAN DIPERTAHANKAN PADA EVENT 'PLAY' VIDEO UTAMA SAJA
         document.getElementById('videoPlayer').addEventListener('play', triggerRedirectAd);
     </script>
 
@@ -137,6 +146,12 @@
         const recommendationGallery = document.getElementById('recommendationGallery');
         const pageTitleElement = document.getElementById('pageTitle');
         const shareButton = document.getElementById('shareButton');
+        
+        // Elemen Meta Tag yang Baru
+        const ogTitle = document.getElementById('ogTitle');
+        const ogUrl = document.getElementById('ogUrl');
+        const ogDescription = document.getElementById('ogDescription');
+        const ogImage = document.getElementById('ogImage');
 
         let allVideos = [];
 
@@ -211,7 +226,7 @@
         }
 
 
-        // --- LOGIKA UTAMA PEMUTAR (TIDAK BERUBAH) ---
+        // --- LOGIKA UTAMA PEMUTAR (DITAMBAH LOGIKA UPDATE META TAG) ---
         fetch('videos.json')
             .then(res => res.json())
             .then(data => {
@@ -223,13 +238,28 @@
                 const currentVideo = allVideos.find(v => v.id === videoId);
 
                 if (currentVideo) {
+                    // Update Judul & Player
                     videoTitleElement.textContent = currentVideo.title;
                     pageTitleElement.textContent = `King Bokep | ${currentVideo.title}`;
-                    
                     videoPlayer.src = currentVideo.url;
-                    videoPlayer.preload = 'metadata';
-                    videoPlayer.removeAttribute('poster'); 
+                    
+                    // *** LOGIKA DINAMIS OPEN GRAPH DI SINI ***
+                    const description = `Tonton video: ${currentVideo.title} (${currentVideo.duration || '?'} menit). Hanya di King Bokep!`;
+                    const currentUrl = window.location.href;
+                    const imageUrl = currentVideo.thumbnail || 'https://videyindoviral.vercel.app/logo1.png'; // Gunakan thumbnail jika ada
 
+                    ogTitle.setAttribute('content', currentVideo.title);
+                    ogUrl.setAttribute('content', currentUrl);
+                    ogDescription.setAttribute('content', description);
+                    ogImage.setAttribute('content', imageUrl);
+                    
+                    // Update Twitter meta tags juga
+                    document.querySelector('meta[name="twitter:title"]').setAttribute('content', currentVideo.title);
+                    document.querySelector('meta[name="twitter:description"]').setAttribute('content', description);
+                    document.querySelector('meta[name="twitter:image"]').setAttribute('content', imageUrl);
+                    // *** AKHIR LOGIKA DINAMIS OPEN GRAPH ***
+
+                    // Tampilkan Rekomendasi
                     const recommendations = getRandomVideos(videoId, 4); 
                     
                     recommendationGallery.innerHTML = '';
@@ -244,7 +274,7 @@
 
                 } else {
                     videoTitleElement.textContent = 'Video Tidak Ditemukan';
-                    // Pemberian pesan error yang lebih jelas di area player
+                    // ... (penanganan error lainnya)
                     const playerContainer = videoPlayer.parentNode;
                     playerContainer.innerHTML = '<div class="absolute inset-0 flex items-center justify-center bg-gray-900/90 text-red-400 text-xl font-semibold">Video tidak valid atau tidak ditemukan.</div>';
                     videoPlayer.style.display = 'none';
