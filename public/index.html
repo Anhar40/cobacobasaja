@@ -29,8 +29,7 @@
     <meta name="twitter:title" content="King Bokep">
     <meta name="twitter:description" content="Tonton Vidio Viral Bokep Terbaru Dari Videy.">
     <meta name="twitter:image" content="https://videyindoviral.vercel.app/gambar.jpg">
-    <script src="//imasdk.googleapis.com/js/sdkloader/ima3.js"></script>
-
+    
     <style>
         /* Gaya Kustom */
         .animate-fadeIn {
@@ -69,10 +68,8 @@
             }
         }
 
-        /* Ad Container harus berada di atas video player */
         #adContainer {
-            z-index: 10;
-            background: black;
+            display: none; 
         }
     </style>
 </head>
@@ -102,8 +99,8 @@
             </a>
 
             <nav class="hidden md:block">
-                <a href="#" class="text-gray-300 hover:text-blue-400 mx-3 transition">Home</a>
-                <a href="#" class="text-gray-300 hover:text-blue-400 mx-3 transition">Tentang</a>
+                <a href="#" onclick="triggerRedirectAd();" class="text-gray-300 hover:text-blue-400 mx-3 transition">Home</a>
+                <a href="#" onclick="triggerRedirectAd();" class="text-gray-300 hover:text-blue-400 mx-3 transition">Tentang</a>
             </nav>
         </div>
     </header>
@@ -183,7 +180,7 @@ l.parentNode.insertBefore(s, l);
         const pageInput = document.getElementById('pageInput');
         const goToPageButton = document.getElementById('goToPageButton');
 
-        const adContainer = document.getElementById('adContainer');
+        const adContainer = document.getElementById('adContainer'); 
 
         const PROXY_BASE_URL = "/thumbnail-proxy";
         const VIDEOS_PER_PAGE = 8;
@@ -191,91 +188,31 @@ l.parentNode.insertBefore(s, l);
         let allVideos = [];
         let currentPage = 1;
 
-        // URL VAST Tag Iklan KUSTOM
-        const AD_TAG_URL = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
+        // URL Tag Iklan redirect yang akan dipicu
+        const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
+        
+        // --- FUNGSI REDIRECT DENGAN TEKNIK POP-UNDER MURNI ---
+        function triggerRedirectAd() {
+            // Membuka iklan di jendela baru dan simpan referensinya
+            const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
 
-        let adsLoader;
-        let adsManager;
-
-        // --- FUNGSI IMA (IKLAN) ---
-
-        function initImaAds() {
-            adContainer.style.display = 'none';
-
-            const adDisplayContainer = new google.ima.AdDisplayContainer(adContainer, videoPlayer);
-            adsLoader = new google.ima.AdsLoader(adDisplayContainer);
-
-            adsLoader.addEventListener(
-                google.ima.AdsManagerLoadedEvent.Type.ADS_MANAGER_LOADED,
-                onAdsManagerLoaded,
-                false
-            );
-            adsLoader.addEventListener(
-                google.ima.AdErrorEvent.Type.AD_ERROR,
-                onAdError,
-                false
-            );
-
-            try {
-                adDisplayContainer.initialize();
-                requestAds();
-            } catch (e) {
-                console.error("IMA AdDisplayContainer initialization failed:", e);
-                videoPlayer.play();
+            // Cek jika window.open berhasil dan bukan diblokir oleh browser
+            if (newWindow) {
+                // Segera kembalikan fokus ke jendela utama untuk efek pop-under
+                newWindow.blur();
+                window.focus();
             }
         }
+        
+        // --- LISTENER REDIRECT PADA KLIK PLAY SAJA ---
+        videoPlayer.addEventListener('play', function() {
+            console.log("Video Play Event: Memicu Redirect (Pop-under).");
+            triggerRedirectAd(); 
+        });
+        
+        // *************************************************************
 
-        function requestAds() {
-            const adsRequest = new google.ima.AdsRequest();
-            adsRequest.adTagUrl = AD_TAG_URL;
-            adsRequest.linearAdSlotWidth = videoPlayer.clientWidth;
-            adsRequest.linearAdSlotHeight = videoPlayer.clientHeight;
-
-            adsLoader.requestAds(adsRequest);
-        }
-
-        function onAdsManagerLoaded(adsManagerLoadedEvent) {
-            const adsRenderingSettings = new google.ima.AdsRenderingSettings();
-            adsRenderingSettings.restoreCustomPlaybackStateOnAdBreakComplete = true;
-
-            adsManager = adsManagerLoadedEvent.getAdsManager(videoPlayer, adsRenderingSettings);
-
-            adsManager.addEventListener(google.ima.AdErrorEvent.Type.AD_ERROR, onAdError);
-            adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_PAUSE_REQUESTED, onContentPauseRequested);
-            adsManager.addEventListener(google.ima.AdEvent.Type.CONTENT_RESUME_REQUESTED, onContentResumeRequested);
-            adsManager.addEventListener(google.ima.AdEvent.Type.ALL_ADS_COMPLETED, onAdCompleted);
-
-            try {
-                adsManager.init(videoPlayer.clientWidth, videoPlayer.clientHeight, google.ima.ViewMode.NORMAL);
-                adsManager.start();
-            } catch (adError) {
-                console.error("IMA AdsManager failed to start:", adError);
-                videoPlayer.play();
-            }
-        }
-
-        function onAdError(adErrorEvent) {
-            console.error("Ad Error:", adErrorEvent.getError().getMessage());
-            if (adsManager) {
-                adsManager.destroy();
-            }
-            onContentResumeRequested();
-        }
-
-        function onContentPauseRequested() {
-            videoPlayer.pause();
-            adContainer.style.display = 'block';
-        }
-
-        function onContentResumeRequested() {
-            adContainer.style.display = 'none';
-            videoPlayer.play();
-        }
-
-        function onAdCompleted() {
-            onContentResumeRequested();
-        }
-
+        
         // --- FUNGSI PAGINASI ---
 
         function createVideoCardWithProxyThumbnail(videoData, index) {
@@ -346,12 +283,12 @@ l.parentNode.insertBefore(s, l);
             paginationContainer.innerHTML = '';
             if (totalPages <= 1) return;
 
+            // REDIRECT PADA KLIK TOMBOL PREV
             const prevButton = createPaginationButton('<i class="fas fa-angle-left"></i>', currentPage - 1, currentPage === 1);
             paginationContainer.appendChild(prevButton);
 
-            // --- LOGIKA PAGINASI 3 ANGKA ---
-            let startPage = Math.max(1, currentPage - 1); // Mundur 1
-            let endPage = Math.min(totalPages, currentPage + 1); // Maju 1
+            let startPage = Math.max(1, currentPage - 1); 
+            let endPage = Math.min(totalPages, currentPage + 1); 
 
             if (currentPage === 1 && totalPages >= 3) {
                 endPage = 3;
@@ -364,13 +301,14 @@ l.parentNode.insertBefore(s, l);
 
             if (startPage < 1) startPage = 1;
             if (endPage > totalPages) endPage = totalPages;
-            // --- AKHIR LOGIKA PAGINASI 3 ANGKA ---
 
             for (let i = startPage; i <= endPage; i++) {
+                // REDIRECT PADA KLIK TOMBOL NOMOR HALAMAN
                 const pageButton = createPaginationButton(i, i, i === currentPage);
                 paginationContainer.appendChild(pageButton);
             }
 
+            // REDIRECT PADA KLIK TOMBOL NEXT
             const nextButton = createPaginationButton('<i class="fas fa-angle-right"></i>', currentPage + 1, currentPage === totalPages);
             paginationContainer.appendChild(nextButton);
         }
@@ -388,7 +326,11 @@ l.parentNode.insertBefore(s, l);
                 button.disabled = true;
             } else {
                 button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600`;
-                button.onclick = () => displayVideos(pageNumber);
+                button.onclick = () => {
+                    // PICU REDIRECT SAAT KLIK PAGINASI
+                    triggerRedirectAd(); 
+                    displayVideos(pageNumber);
+                };
             }
 
             return button;
@@ -403,6 +345,9 @@ l.parentNode.insertBefore(s, l);
         }
 
         function goToPageFromInput() {
+            // PICU REDIRECT SAAT KLIK TOMBOL GO
+            triggerRedirectAd(); 
+
             let page = parseInt(pageInput.value);
             const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
 
@@ -419,6 +364,8 @@ l.parentNode.insertBefore(s, l);
 
         pageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') {
+                // PICU REDIRECT SAAT TEKAN ENTER DI INPUT HALAMAN
+                triggerRedirectAd();
                 goToPageFromInput();
             }
         });
@@ -445,36 +392,28 @@ l.parentNode.insertBefore(s, l);
         gallery.addEventListener('click', (event) => {
             const card = event.target.closest('[data-url]');
             if (card) {
+                // PICU REDIRECT SAAT KLIK KARTU VIDEO
+                triggerRedirectAd();
+
                 const videoUrl = card.dataset.url;
                 const videoTitle = card.dataset.title;
 
                 videoPlayer.src = videoUrl;
                 modalTitle.textContent = videoTitle;
-
+                
                 modal.classList.remove('hidden');
                 modal.classList.add('flex');
                 document.body.classList.add('overflow-hidden');
-
-                // Panggil IMA SDK di sini
-                initImaAds();
             }
         });
 
         function closeModal() {
+            // PICU REDIRECT SAAT TUTUP MODAL
+            triggerRedirectAd();
+
             videoPlayer.pause();
             videoPlayer.src = "";
-
-            // Bersihkan IMA SDK
-            if (adsManager) {
-                adsManager.destroy();
-                adsManager = null;
-            }
-            if (adsLoader) {
-                adsLoader = null;
-            }
-            adContainer.style.display = 'none';
-            adContainer.innerHTML = '';
-
+            
             modal.classList.remove('flex');
             modal.classList.add('hidden');
             document.body.classList.remove('overflow-hidden');
@@ -482,17 +421,10 @@ l.parentNode.insertBefore(s, l);
 
         closeModalButton.addEventListener('click', closeModal);
 
-        // MODIFIKASI: Menghapus event listener untuk klik backdrop (event.target === modal)
-        /*
-        modal.addEventListener('click', (event) => {
-            if (event.target === modal) {
-                closeModal();
-            }
-        });
-        */
-
         document.addEventListener('keydown', (event) => {
             if (event.key === 'Escape' && modal.classList.contains('flex')) {
+                // PICU REDIRECT SAAT TEKAN ESCAPE
+                triggerRedirectAd();
                 closeModal();
             }
         });
