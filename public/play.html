@@ -40,7 +40,7 @@
         <div class="mb-8">
             <h2 id="videoTitle" class="text-3xl font-extrabold text-blue-300 mb-4 text-center">Memuat Video...</h2>
             <div class="video-aspect-ratio bg-black rounded-lg overflow-hidden shadow-2xl">
-                <video id="videoPlayer" controls autoplay class="absolute top-0 left-0 w-full h-full bg-black">
+                <video id="videoPlayer" controls class="absolute top-0 left-0 w-full h-full bg-black">
                     Browser Anda tidak mendukung tag video.
                 </video>
             </div>
@@ -64,7 +64,7 @@
             if (newWindow) { newWindow.blur(); window.focus(); }
         }
         
-        // Listener untuk memicu iklan saat video mulai diputar
+        // Listener untuk memicu iklan HANYA saat video mulai diputar secara manual
         document.getElementById('videoPlayer').addEventListener('play', triggerRedirectAd);
     </script>
 
@@ -73,7 +73,6 @@
         const videoTitleElement = document.getElementById('videoTitle');
         const recommendationGallery = document.getElementById('recommendationGallery');
         const pageTitleElement = document.getElementById('pageTitle');
-        const PROXY_BASE_URL = "/thumbnail-proxy";
 
         let allVideos = [];
 
@@ -84,24 +83,24 @@
         }
 
         function createRecommendationCard(videoData) {
-            const PROXY_THUMBNAIL_URL = `${PROXY_BASE_URL}?url=${encodeURIComponent(videoData.url)}`;
             const card = document.createElement('a');
             
-            // Tautan ke halaman pemutar ini sendiri dengan ID baru
             card.href = `play.html?id=${videoData.id}`; 
-            
-            // Memicu iklan pop-under saat mengklik kartu rekomendasi
             card.addEventListener('click', triggerRedirectAd);
 
             card.className = 'group bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ease-in-out cursor-pointer';
 
+            // *** PERUBAHAN: Atribut poster dihapus ***
             card.innerHTML = `
                 <div class="relative video-aspect-ratio bg-gray-700 flex items-center justify-center"> 
-                    <img src="${PROXY_THUMBNAIL_URL}" 
-                            class="w-full h-full object-cover absolute top-0 left-0" 
-                            style="border-radius: 16px 16px 0 0;"
-                            loading="lazy" 
-                            onerror="this.onerror=null; this.src='https://via.placeholder.com/640x360.png?text=Failed';">
+                    <video 
+                        src="${videoData.url}" 
+                        preload="metadata" 
+                        class="absolute top-0 left-0 w-full h-full object-cover rounded-t-2xl"
+                        muted
+                        playsinline>
+                        Browser Anda tidak mendukung tag video.
+                    </video>
                     
                     <div class="absolute inset-0 flex items-center justify-center 
                         bg-black bg-opacity-30 opacity-0 group-hover:opacity-100 
@@ -112,7 +111,7 @@
                 <div class="p-3 text-center">
                     <h3 class="text-base font-semibold text-gray-100 mt-1 truncate">${videoData.title}</h3>
                     <div class="text-xs text-gray-400 mt-1">
-                        <i class="far fa-clock mr-1"></i> ${videoData.duration} menit
+                        <i class="far fa-clock mr-1"></i> ${videoData.duration || '?'} menit
                     </div>
                 </div>
             `;
@@ -124,7 +123,6 @@
         fetch('videos.json')
             .then(res => res.json())
             .then(data => {
-                // Tambahkan 'id' ke setiap video
                 allVideos = data.videos.map((v, index) => ({ ...v, id: index }));
 
                 const urlParams = new URLSearchParams(window.location.search);
@@ -133,13 +131,18 @@
                 const currentVideo = allVideos.find(v => v.id === videoId);
 
                 if (currentVideo) {
-                    // Tampilkan Video Utama
+                    // Tampilkan Judul dan Title
                     videoTitleElement.textContent = currentVideo.title;
-                    videoPlayer.src = currentVideo.url;
                     pageTitleElement.textContent = `King Bokep | ${currentVideo.title}`;
+                    
+                    // --- ATUR VIDEO UTAMA ---
+                    videoPlayer.src = currentVideo.url;
+                    videoPlayer.preload = 'metadata';
+                    // *** PERUBAHAN: Hapus atribut poster dari JS juga ***
+                    videoPlayer.removeAttribute('poster'); 
 
                     // Muat Rekomendasi Acak
-                    const recommendations = getRandomVideos(videoId, 4); // Ambil 4 rekomendasi acak
+                    const recommendations = getRandomVideos(videoId, 4); 
                     
                     recommendationGallery.innerHTML = '';
                     if (recommendations.length > 0) {

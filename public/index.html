@@ -27,11 +27,15 @@
             grid-template-columns: repeat(2, minmax(0, 1fr));
             gap: 1.5rem;
         }
-        /* Style untuk Iframe agar terlihat seperti video player */
-        .video-iframe { border-radius: 16px 16px 0 0; }
 
         @media (min-width: 768px) { .video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
         @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        
+        /* Gaya untuk video player di galeri agar tidak menampilkan kontrol bawaan */
+        .video-in-card {
+            pointer-events: none; /* Mencegah interaksi langsung dengan player */
+            border-radius: 16px 16px 0 0;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-100">
@@ -97,8 +101,6 @@ l.parentNode.insertBefore(s, l);
         const pageInput = document.getElementById('pageInput');
         const goToPageButton = document.getElementById('goToPageButton');
 
-        // Hapus PROXY_BASE_URL karena tidak ada thumbnail gambar lagi.
-        // const PROXY_BASE_URL = "/thumbnail-proxy"; 
         const VIDEOS_PER_PAGE = 8;
         const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
         
@@ -110,12 +112,12 @@ l.parentNode.insertBefore(s, l);
             if (newWindow) { newWindow.blur(); window.focus(); }
         }
 
-        // FUNGSI BARU: Mendapatkan durasi dari URL video
         function getDurationFromVideo(videoUrl) {
             return new Promise((resolve, reject) => {
                 const videoElement = document.createElement('video');
                 
-                videoElement.preload = 'metadata';
+                // Hanya muat metadata untuk menghitung durasi
+                videoElement.preload = 'metadata'; 
                 videoElement.crossOrigin = 'anonymous'; 
 
                 videoElement.onloadedmetadata = function() {
@@ -136,39 +138,25 @@ l.parentNode.insertBefore(s, l);
         function createVideoCard(videoData, index) {
             const card = document.createElement('a');
 
-            // Tautan ke halaman pemutar (play.html)
             card.href = `play.html?id=${videoData.id}`; 
-            
-            // Tambahkan event listener untuk redirect saat klik kartu
-            card.addEventListener('click', triggerRedirectAd);
+            card.addEventListener('click', (e) => {
+                triggerRedirectAd();
+            });
 
             card.className = 'group bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn';
             card.style.animationDelay = `${index * 0.05}s`;
 
-            // --- PERUBAHAN UTAMA DI SINI: Menggunakan Iframe Player sebagai Thumbnail ---
-            // Kita menggunakan Iframe karena player video biasa (<video>) tidak dapat diklik 
-            // sekaligus memicu event redirect pada elemen <a> di sekitarnya dengan baik.
-
-            // Iframe menunjuk ke halaman play.html, tapi hanya menampilkan player.
-            // **PENTING:** Karena Anda ingin tampilan video itu sendiri, 
-            // kita asumsikan video Anda dapat di-embed langsung ke iframe. 
-            // Jika video Anda adalah file MP4, Anda mungkin perlu membuat `player-embed.html` terpisah.
-            // Untuk kesederhanaan, kita akan menggunakan URL video asli sebagai sumber iframe (bisa jadi tidak berfungsi tergantung hosting video).
-
-            // ALTERNATIF PALING RELIABEL: Gunakan embed yang sama yang ada di play.html tapi sebagai iframe.
-            const playerEmbedUrl = `play.html?id=${videoData.id}&embed=true`; // Tambahkan param embed
-
+            // *** PERUBAHAN: Atribut poster dihapus ***
             card.innerHTML = `
-                <div class="relative video-aspect-ratio bg-black flex items-center justify-center"> 
-                    <iframe 
+                <div class="relative video-aspect-ratio bg-gray-700 flex items-center justify-center rounded-t-2xl"> 
+                    <video 
                         src="${videoData.url}" 
-                        allow="autoplay; fullscreen"
-                        frameborder="0"
-                        scrolling="no"
-                        class="absolute top-0 left-0 w-full h-full video-iframe"
-                        style="pointer-events: none;"
-                        loading="lazy">
-                    </iframe>
+                        preload="metadata" 
+                        class="absolute top-0 left-0 w-full h-full object-cover video-in-card"
+                        muted
+                        playsinline>
+                        Browser Anda tidak mendukung tag video.
+                    </video>
                     
                     <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
                         bg-black bg-opacity-30 opacity-100 group-hover:opacity-100 
@@ -184,7 +172,7 @@ l.parentNode.insertBefore(s, l);
                 </div>
             `;
             
-            // Panggil fungsi untuk mendapatkan durasi dan mengupdate elemen
+            // Panggil fungsi untuk mendapatkan durasi, yang HANYA memuat metadata.
             getDurationFromVideo(videoData.url)
                 .then(duration => {
                     const durationElement = card.querySelector(`#duration-${videoData.id}`);
@@ -202,6 +190,8 @@ l.parentNode.insertBefore(s, l);
             return card;
         }
 
+        // ... (Fungsi-fungsi paginasi lainnya tetap sama) ...
+        
         function displayVideos(page, updateUrl = true) {
             const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
 
