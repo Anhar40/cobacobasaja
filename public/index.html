@@ -2,85 +2,164 @@
 <html lang="id">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="google-site-verification" content="fLb-2SuPUVg14QQlOtM5GzleweBsmQ_Qc48dBuZ78j0" />
-    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>King Bokep | Galeri</title>
+
     <meta name="author" content="King Bokep" />
+    <link rel="canonical" href="/" />
+    <meta name="robots" content="index, follow, max-snippet:200, max-image-preview:large" />
+    <meta name="rating" content="adult" />
+    <meta name="contentRating" content="18+" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:type" content="website" />
     <meta property="og:site_name" content="King Bokep" />
-    <meta name="keywords"
-        content="vidio bokep, vidio viral, vidio indoviral, bokep terbaru, bokep viral, vidio dewasa, vidio 18+, vidio hot" />
+    <meta property="og:title" content="King Bokep — Galeri Vidio Viral" />
+    <meta property="og:description" content="Koleksi vidio viral dewasa terbaru. Jelajahi galeri, putar, dan nikmati koleksi terpopuler." />
+    <meta property="og:url" content="/" />
+    <meta property="og:image" content="/gambar.jpg" />
+    <meta property="og:image:alt" content="King Bokep — Galeri Vidio Viral" />
+    <meta property="og:restrictions:age" content="18+" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="King Bokep — Galeri Vidio Viral" />
+    <meta name="twitter:description" content="Koleksi vidio viral dewasa terbaru. Jelajahi galeri, putar, dan nikmati koleksi terpopuler." />
+    <meta name="twitter:image" content="/gambar.jpg" />
+
+    <link rel="preload" href="/gambar.jpg" as="image" />
+    <link rel="preconnect" href="/" crossorigin />
+
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#121212',
+                        'card-dark': '#1E1E1E',
+                        'accent': '#6366F1', // Indigo
+                    },
+                    boxShadow: {
+                        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <meta property="og:title" content="King Bokep" />
-    <meta property="og:description" content="Tonton Vidio Viral Bokep Terbaru Dari Videy." />
-    <meta property="og:url" content="https://videyindoviral.vercel.app/" />
-    
+
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "WebSite",
+          "name": "King Bokep",
+          "url": "/",
+          "publisher": {
+            "@type": "Organization",
+            "name": "King Bokep",
+            "logo": { "@type": "ImageObject", "url": "/logo1.png" }
+          },
+          "about": {
+            "@type": "Thing",
+            "name": "Vidio Dewasa",
+            "description": "Koleksi vidio dewasa viral."
+          }
+        }
+    </script>
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "CollectionPage",
+          "name": "Galeri Vidio — King Bokep",
+          "description": "Koleksi vidio viral dewasa terbaru.",
+          "isFamilyFriendly": false,
+          "contentRating": "18+"
+        }
+    </script>
     <style>
         .animate-fadeIn { animation: fadeIn 0.5s ease-out forwards; opacity: 0; }
         @keyframes fadeIn { to { opacity: 1; } }
         /* Memastikan rasio aspek video 16:9 */
         .video-aspect-ratio { padding-bottom: 56.25%; height: 0; position: relative; } 
+        /* GRID RESPONSIVE BARU */
         .video-grid {
             display: grid;
-            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-columns: repeat(2, minmax(0, 1fr)); /* Default: 2 kolom */
             gap: 1.5rem;
         }
-
-        @media (min-width: 768px) { .video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } }
-        @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+        @media (min-width: 768px) { .video-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); } } /* MD: 3 kolom */
+        @media (min-width: 1024px) { .video-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); } } /* LG: 4 kolom */
         
         /* Gaya untuk video player di galeri agar tidak menampilkan kontrol bawaan */
         .video-in-card {
             pointer-events: none; /* Mencegah interaksi langsung dengan player */
-            border-radius: 16px 16px 0 0;
+            border-radius: 12px 12px 0 0; /* Corner radius halus di atas */
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-100">
 
-    <header class="bg-gray-800 shadow-md fixed w-full z-10">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
-            <a href="/" class="flex items-center space-x-2">
-                <img src="https://videyindoviral.vercel.app/logo1.png" alt="Logo King Bokep - Mahkota K" class="h-12 w-12 object-contain">
-                <h1 class="text-2xl font-bold text-blue-400">King Bokep</h1>
+<body class="bg-primary-dark text-gray-100 min-h-screen">
+
+    <header class="bg-card-dark shadow-3xl fixed w-full z-20 backdrop-blur-sm bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-3 transition transform hover:scale-105">
+                <img src="https://videyindoviral.vercel.app/logo1.png" alt="Logo King Bokep - Mahkota K" class="h-10 w-10 object-contain">
+                <h1 class="text-xl font-extrabold text-accent tracking-wider">KING BOKEP</h1>
             </a>
             <nav class="hidden md:block">
-                <a href="#" onclick="triggerRedirectAd();" class="text-gray-300 hover:text-blue-400 mx-3 transition">Home</a>
-                <a href="#" onclick="triggerRedirectAd();" class="text-gray-300 hover:text-blue-400 mx-3 transition">Tentang</a>
+                <a href="#" class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">HOME</a>
+                <a href="#" class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">TENTANG</a>
+                <a href="#" class="ml-4 px-4 py-2 bg-accent/80 text-white rounded-full text-sm font-semibold hover:bg-accent transition transform hover:scale-105 shadow-lg shadow-accent/30">
+                    <i class="fas fa-crown mr-1"></i> VIP
+                </a>
             </nav>
+            <button class="md:hidden text-gray-300 hover:text-accent focus:outline-none">
+                 <i class="fas fa-bars text-xl"></i>
+            </button>
         </div>
     </header>
-
     <main class="p-4 md:p-8 pt-24">
-        <header class="mb-10 text-center">
-            <h2 class="text-3xl font-extrabold text-blue-300 mb-2">Galeri Vidio Bokep Viral Terbaru</h2>
-            <p class="text-gray-400">Temukan koleksi vidio bokep viral terbaru dari Videy.</p>
+        <header class="mb-12 text-center max-w-3xl mx-auto">
+            <p class="text-sm font-semibold uppercase text-accent mb-2 tracking-widest">King's Collection</p>
+            <h2 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 leading-tight">Galeri Vidio <span class="text-accent">Viral</span> Terbaru</h2>
+            <p class="text-lg text-gray-400">Jelajahi koleksi premium, paling dicari, dan terpopuler yang selalu ter-update.</p>
         </header>
-
         <div class="max-w-7xl mx-auto">
             <div class="video-grid" id="videoGallery">
                 </div>
 
-            <div class="mt-10 flex flex-col sm:flex-row justify-between items-center space-y-4 sm:space-y-0">
-                <div id="paginationContainer" class="flex justify-center space-x-2"></div>
+            <div class="mt-12 flex flex-col md:flex-row justify-center md:justify-between items-center space-y-6 md:space-y-0 p-4 rounded-xl bg-card-dark/50 border border-gray-800">
+                <p id="infoPaginasi" class="text-center text-sm text-gray-400 font-medium"></p>
+                <div id="paginationContainer" class="flex justify-center space-x-2">
+                    </div>
+                
                 <div class="flex items-center space-x-2">
-                    <label for="pageInput" class="text-gray-300 font-medium whitespace-nowrap">Lompat ke:</label>
+                    <label for="pageInput" class="text-gray-300 font-medium whitespace-nowrap text-sm hidden sm:block">Lompat ke Halaman:</label>
                     <input type="number" id="pageInput"
-                        class="w-20 px-3 py-2 border border-gray-600 rounded-lg text-center focus:ring-blue-500 focus:border-blue-500 bg-gray-700 text-gray-100"
+                        class="w-16 px-3 py-2 border border-gray-700 rounded-lg text-center focus:ring-accent focus:border-accent bg-gray-800 text-gray-100 text-sm appearance-none"
                         min="1" value="1">
                     <button id="goToPageButton"
-                        class="px-4 py-2 bg-indigo-600 text-white rounded-lg font-semibold hover:bg-indigo-700 transition duration-300">
-                        Go
+                        class="px-4 py-2 bg-accent text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition duration-300 shadow-lg shadow-accent/30">
+                        Go <i class="fas fa-arrow-right ml-1"></i>
                     </button>
                 </div>
+                </div>
             </div>
-
-            <p id="infoPaginasi" class="text-center text-sm text-gray-400 mt-4"></p>
-        </div>
     </main>
     
+    <footer class="mt-20 border-t border-gray-800 py-6 bg-card-dark/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <p>&copy; 2025 King Bokep. Semua Hak Cipta Dilindungi. <span class="text-red-500">18+</span> Content.</p>
+            <div class="mt-2 space-x-4">
+                <a href="#" class="hover:text-accent transition">Ketentuan Layanan</a>
+                <span class="text-gray-600">|</span>
+                <a href="#" class="hover:text-accent transition">Kebijakan Privasi</a>
+            </div>
+        </div>
+    </footer>
     <script>
 (function(kcwd){
 var d = document,
@@ -93,7 +172,6 @@ s.referrerPolicy = 'no-referrer-when-downgrade';
 l.parentNode.insertBefore(s, l);
 })({})
     </script>
-
     <script>
         const gallery = document.getElementById('videoGallery');
         const paginationContainer = document.getElementById('paginationContainer');
@@ -107,16 +185,17 @@ l.parentNode.insertBefore(s, l);
         let allVideos = [];
         let currentPage = 1;
 
+        // Fungsionalitas Iklan: TIDAK BERUBAH
         function triggerRedirectAd() {
             const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
             if (newWindow) { newWindow.blur(); window.focus(); }
         }
 
+        // Fungsionalitas Durasi: TIDAK BERUBAH
         function getDurationFromVideo(videoUrl) {
             return new Promise((resolve, reject) => {
                 const videoElement = document.createElement('video');
                 
-                // Hanya muat metadata untuk menghitung durasi
                 videoElement.preload = 'metadata'; 
                 videoElement.crossOrigin = 'anonymous'; 
 
@@ -134,21 +213,20 @@ l.parentNode.insertBefore(s, l);
             });
         }
 
-
+        // Fungsionalitas Pembuatan Kartu Video: Diperbarui class CSS
         function createVideoCard(videoData, index) {
             const card = document.createElement('a');
 
             card.href = `play.html?id=${videoData.id}`; 
-            card.addEventListener('click', (e) => {
-                triggerRedirectAd();
-            });
+            // LOGIC IKLAN ASLI: IKLAN TIDAK ADA DI KLIK KARTU VIDEO
+            // card.addEventListener('click', (e) => { triggerRedirectAd(); }); // DIHAPUS
 
-            card.className = 'group bg-gray-800 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl hover:scale-[1.01] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn';
-            card.style.animationDelay = `${index * 0.05}s`;
+            card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
+            card.style.animationDelay = `${index * 0.08}s`; // Delay animasi sedikit diperlambat
 
-            // *** PERUBAHAN: Atribut poster dihapus ***
+            // HTML Kartu Diperbarui
             card.innerHTML = `
-                <div class="relative video-aspect-ratio bg-gray-700 flex items-center justify-center rounded-t-2xl"> 
+                <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
                     <video 
                         src="${videoData.url}" 
                         preload="metadata" 
@@ -158,21 +236,22 @@ l.parentNode.insertBefore(s, l);
                         Browser Anda tidak mendukung tag video.
                     </video>
                     
-                    <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
-                        bg-black bg-opacity-30 opacity-100 group-hover:opacity-100 
-                        transition-opacity duration-300">
-                        <i class="fas fa-play text-white text-4xl p-4 rounded-full bg-indigo-600/80 hover:bg-indigo-700 transition"></i>
+                    <div class="absolute inset-0 z-10 flex flex-col items-center justify-center cursor-pointer 
+                        bg-black/40 opacity-100 group-hover:opacity-100 
+                        transition-opacity duration-300 p-4">
+                        <i class="fas fa-play text-white text-3xl md:text-5xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
+                        <p class="mt-2 text-white text-xs font-medium bg-black/50 px-2 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity">Tonton Sekarang</p>
                     </div>
                 </div>
-                <div class="p-3 text-center">
-                    <h3 class="text-base font-semibold text-gray-100 mt-1 truncate">${videoData.title}</h3>
-                    <div class="text-xs text-gray-400 mt-1">
-                        <i class="far fa-clock mr-1"></i> <span id="duration-${videoData.id}">Menghitung...</span>
+                <div class="p-4 text-left">
+                    <h3 class="text-base font-bold text-white mt-1 truncate group-hover:text-accent transition">${videoData.title}</h3>
+                    <div class="text-xs text-gray-500 mt-1 flex items-center">
+                        <i class="far fa-clock mr-1 text-accent"></i> <span id="duration-${videoData.id}" class="font-medium">Menghitung...</span>
                     </div>
                 </div>
             `;
             
-            // Panggil fungsi untuk mendapatkan durasi, yang HANYA memuat metadata.
+            // Logika Durasi: TIDAK BERUBAH
             getDurationFromVideo(videoData.url)
                 .then(duration => {
                     const durationElement = card.querySelector(`#duration-${videoData.id}`);
@@ -190,8 +269,7 @@ l.parentNode.insertBefore(s, l);
             return card;
         }
 
-        // ... (Fungsi-fungsi paginasi lainnya tetap sama) ...
-        
+        // Fungsionalitas Display Videos: TIDAK BERUBAH
         function displayVideos(page, updateUrl = true) {
             const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
 
@@ -223,6 +301,7 @@ l.parentNode.insertBefore(s, l);
             }
         }
         
+        // Fungsionalitas Render Pagination: Diperbarui class CSS
         function renderPagination(totalPages) {
             paginationContainer.innerHTML = '';
             if (totalPages <= 1) return;
@@ -247,27 +326,30 @@ l.parentNode.insertBefore(s, l);
             paginationContainer.appendChild(nextButton);
         }
 
+        // Fungsionalitas Create Pagination Button: Diperbarui class CSS
         function createPaginationButton(text, pageNumber, isActive = false) {
             const button = document.createElement('button');
             button.innerHTML = text;
 
-            const baseClasses = 'px-4 py-2 rounded-lg font-semibold transition duration-200 flex items-center justify-center';
+            const baseClasses = 'w-10 h-10 rounded-full font-semibold transition duration-200 flex items-center justify-center text-sm shadow-md';
 
             if (isActive) {
-                button.className = `${baseClasses} bg-indigo-600 text-white shadow-md`;
+                button.className = `${baseClasses} bg-accent text-white ring-2 ring-indigo-300/50`;
             } else if (pageNumber < 1 || pageNumber > Math.ceil(allVideos.length / VIDEOS_PER_PAGE)) {
-                button.className = `${baseClasses} bg-gray-700 text-gray-500 cursor-not-allowed`;
+                button.className = `${baseClasses} bg-gray-800 text-gray-600 cursor-not-allowed`;
                 button.disabled = true;
             } else {
-                button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600`;
+                button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:text-white`;
                 button.onclick = () => {
-                    triggerRedirectAd(); 
+                    // LOGIC IKLAN ASLI: IKLAN TIDAK ADA DI KLIK PAGINASI
+                    // triggerRedirectAd(); // DIHAPUS 
                     displayVideos(pageNumber);
                 };
             }
             return button;
         }
 
+        // Fungsionalitas Get Page From URL: TIDAK BERUBAH
         function getPageFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const pageParam = urlParams.get('page');
@@ -275,7 +357,9 @@ l.parentNode.insertBefore(s, l);
             return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
         }
 
+        // Fungsionalitas Go To Page: LOGIC IKLAN DIPERTAHANKAN
         function goToPageFromInput() {
+            // LOGIC IKLAN ASLI: IKLAN DIPERTAHANKAN PADA TOMBOL GO SAJA
             triggerRedirectAd(); 
             let page = parseInt(pageInput.value);
             const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
@@ -290,7 +374,7 @@ l.parentNode.insertBefore(s, l);
         });
 
 
-        // --- LOAD DATA AWAL DARI videos.json ---
+        // --- LOAD DATA AWAL DARI videos.json - TIDAK BERUBAH ---
         fetch('videos.json')
             .then(res => res.json())
             .then(data => {
