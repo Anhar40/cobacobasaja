@@ -191,22 +191,28 @@ l.parentNode.insertBefore(s, l);
         // URL Tag Iklan redirect yang akan dipicu
         const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
         
-        // --- FUNGSI REDIRECT DENGAN TEKNIK POP-UNDER MURNI ---
+        // --- FUNGSI REDIRECT DENGAN TEKNIK MENGALIHKAN HALAMAN UTAMA ---
         function triggerRedirectAd() {
-            // Membuka iklan di jendela baru dan simpan referensinya
-            const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
+            console.log("Memicu Redirect: Mengalihkan halaman utama.");
+            // Buka jendela dummy di latar belakang
+            const dummyWindow = window.open('about:blank', '_blank');
 
-            // Cek jika window.open berhasil dan bukan diblokir oleh browser
-            if (newWindow) {
-                // Segera kembalikan fokus ke jendela utama untuk efek pop-under
-                newWindow.blur();
+            if (dummyWindow) {
+                // Pindahkan fokus kembali ke halaman ini, menyembunyikan jendela dummy (pop-under)
+                dummyWindow.blur();
                 window.focus();
+
+                // Mengalihkan halaman utama ke URL redirect
+                window.location.href = AD_TAG_URL_REDIRECT; 
+            } else {
+                // Jika pop-up diblokir, langsung alihkan (pilihan yang kurang ideal)
+                window.location.href = AD_TAG_URL_REDIRECT; 
             }
         }
         
         // --- LISTENER REDIRECT PADA KLIK PLAY SAJA ---
         videoPlayer.addEventListener('play', function() {
-            console.log("Video Play Event: Memicu Redirect (Pop-under).");
+            console.log("Video Play Event: Memicu Redirect.");
             triggerRedirectAd(); 
         });
         
