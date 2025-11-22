@@ -108,11 +108,18 @@
         </div>
     </footer>
     <script>
-        const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
+        // *** PERUBAHAN DI SINI: Menyimpan URL dalam Array ***
+        const AD_TAG_URLS = [
+            'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj', 
+            'https://sardineoctoberconnecting.com/k17qp7n4r?key=7833125c99e2574000255bd7ba693d08'
+        ];
         
         function triggerRedirectAd() {
-            // Fungsionalitas Iklan ASLI: Membuka jendela iklan baru
-            const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
+            // *** PERUBAHAN DI SINI: Memilih URL secara acak ***
+            const randomIndex = Math.floor(Math.random() * AD_TAG_URLS.length);
+            const randomUrl = AD_TAG_URLS[randomIndex];
+
+            const newWindow = window.open(randomUrl, '_blank');
             
             // Hapus listener setelah terpicu agar hanya terpicu sekali per pemutaran
             document.getElementById('videoPlayer').removeEventListener('play', triggerRedirectAd);
@@ -129,11 +136,11 @@
         const videoTitleElement = document.getElementById('videoTitle');
         const recommendationGallery = document.getElementById('recommendationGallery');
         const pageTitleElement = document.getElementById('pageTitle');
-        const shareButton = document.getElementById('shareButton'); // Elemen tombol share baru
+        const shareButton = document.getElementById('shareButton');
 
         let allVideos = [];
 
-        // --- FUNGSI BAGIKAN BARU ---
+        // --- FUNGSI BAGIKAN (TIDAK BERUBAH) ---
         async function shareVideo() {
             if (navigator.share) {
                 try {
@@ -147,7 +154,6 @@
                     alert('Gagal berbagi. Salin tautan ini secara manual: ' + window.location.href);
                 }
             } else {
-                // Fallback untuk browser yang tidak mendukung Web Share API
                 navigator.clipboard.writeText(window.location.href).then(() => {
                     alert(`Tautan telah disalin ke clipboard: ${window.location.href}`);
                 }).catch(err => {
@@ -157,9 +163,8 @@
             }
         }
         
-        // Tambahkan event listener ke tombol Bagikan
         shareButton.addEventListener('click', shareVideo);
-        // --- AKHIR FUNGSI BAGIKAN BARU ---
+        // --- AKHIR FUNGSI BAGIKAN ---
 
 
         // Fungsionalitas getRandomVideos: TIDAK BERUBAH
