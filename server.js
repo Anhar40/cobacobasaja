@@ -1,19 +1,21 @@
 import express from "express";
-import fetch from "node-fetch";
 import path from "path";
 import { fileURLToPath } from "url";
+import puppeteer from "puppeteer";
 
 const app = express();
-const PORT = 3000;
+app.use(express.json());
+
+const PORT = process.env.PORT || 3000;
 
 // dirname fix
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// ===========================
-// PROXY API FIX TANPA BLOKIR
-// ===========================
-app.get("/proxy-api", async (req, res) => {
+// ---------------------------------------------------
+// 1. PROXY ANTI-CLOUDFLARE MENGGUNAKAN PUPPETEER
+// ---------------------------------------------------
+pp.get("/proxy-api", async (req, res) => {
     try {
         const url = "https://www.eporner.com/api/v2/video/search/";
 
@@ -66,16 +68,38 @@ app.get("/proxy-api", async (req, res) => {
     }
 });
 
-// ===========================
-// STATIC FILES + ROUTES
-// ===========================
+// ---------------------------------------------------
+// 2. Static Files
+// ---------------------------------------------------
 app.use(express.static(path.join(__dirname, "public")));
 
+// ---------------------------------------------------
+// 3. Routes HTML
+// ---------------------------------------------------
 app.get("/", (req, res) => {
     res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
+app.get("/tentang", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "about.html"));
+});
+
+app.get("/login", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "login.html"));
+});
+
+app.get("/register", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "register.html"));
+});
+
+app.get("/eporner", (req, res) => {
+    res.sendFile(path.join(__dirname, "public", "eporner.html"));
+});
+
+// ---------------------------------------------------
+// 4. Server
+// ---------------------------------------------------
 app.listen(PORT, () => {
-    console.log(`Server berjalan di http://localhost:${PORT}`);
-    console.log(`Coba: http://localhost:${PORT}/proxy-api?q=indo`);
+    console.log(`✅ Server berjalan di http://localhost:${PORT}`);
+    console.log(`🔗 Coba akses: http://localhost:${PORT}/proxy-api?q=test`);
 });
