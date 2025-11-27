@@ -260,7 +260,7 @@
                 l.parentNode.insertBefore(s, l);
             })({})
     </script>
-    <script>
+   <script>
 const gallery = document.getElementById('videoGallery');
 const paginationContainer = document.getElementById('paginationContainer');
 const infoPaginasi = document.getElementById('infoPaginasi');
@@ -295,30 +295,16 @@ function getDurationFromVideo(videoUrl) {
 
 // === Fungsi Dekripsi Thumbnail AES-GCM ===
 async function decryptThumbnail(encrypted) {
-    /**
-     * encrypted = {
-     *   ciphertext: base64 string,
-     *   nonce: base64 string,
-     *   tag: base64 string,
-     *   key: base64 string
-     * }
-     */
     try {
-        const enc = new TextEncoder();
-        const dec = new TextDecoder();
-
-        // Convert base64 → ArrayBuffer
         const ciphertext = Uint8Array.from(atob(encrypted.ciphertext), c => c.charCodeAt(0));
         const nonce = Uint8Array.from(atob(encrypted.nonce), c => c.charCodeAt(0));
         const tag = Uint8Array.from(atob(encrypted.tag), c => c.charCodeAt(0));
         const keyBytes = Uint8Array.from(atob(encrypted.key), c => c.charCodeAt(0));
 
-        // Gabungkan ciphertext + tag (WebCrypto expects tag appended)
         const cipherPlusTag = new Uint8Array(ciphertext.length + tag.length);
         cipherPlusTag.set(ciphertext);
         cipherPlusTag.set(tag, ciphertext.length);
 
-        // Import key ke CryptoKey
         const cryptoKey = await crypto.subtle.importKey(
             "raw",
             keyBytes,
@@ -327,20 +313,14 @@ async function decryptThumbnail(encrypted) {
             ["decrypt"]
         );
 
-        // Dekripsi
         const decrypted = await crypto.subtle.decrypt(
-            {
-                name: "AES-GCM",
-                iv: nonce
-            },
+            { name: "AES-GCM", iv: nonce },
             cryptoKey,
             cipherPlusTag
         );
 
-        // Buat URL untuk image
         const blob = new Blob([decrypted], { type: 'image/jpeg' });
-        const url = URL.createObjectURL(blob);
-        return url;
+        return URL.createObjectURL(blob);
 
     } catch (err) {
         console.error("Gagal dekripsi thumbnail:", err);
@@ -348,23 +328,19 @@ async function decryptThumbnail(encrypted) {
     }
 }
 
-// Contoh integrasi ke createVideoCard
+// Buat kartu video
 async function createVideoCard(videoData, index) {
     const card = document.createElement('a');
     card.href = `play3.html?id=${videoData.id}`;
     card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
     card.style.animationDelay = `${index * 0.08}s`;
 
-    // Tentukan thumbnail
     let thumbnailUrl = null;
     if (videoData.thumbnail_encrypted) {
-        // Dekripsi thumbnail
         thumbnailUrl = await decryptThumbnail(videoData.thumbnail_encrypted);
+        console.log(`Thumbnail terdekripsi untuk video ID ${videoData.id}:`, thumbnailUrl);
     }
-    if (!thumbnailUrl) {
-        // fallback: frame pertama video
-        thumbnailUrl = videoData.url + '#t=1';
-    }
+    if (!thumbnailUrl) thumbnailUrl = videoData.url + '#t=1';
 
     card.innerHTML = `
         <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
@@ -390,12 +366,12 @@ async function createVideoCard(videoData, index) {
             </div>
         </div>
     `;
- return card;
+    return card;
 }
-// === Display Video (Async karena kartu async) ===
+
+// === Display Video (Async) ===
 async function displayVideos(page, updateUrl = true) {
     const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
-
     if (page < 1) page = 1;
     if (page > totalPages) page = totalPages;
 
@@ -437,8 +413,6 @@ function renderPagination(totalPages) {
     if (currentPage === 1 && totalPages >= 3) { endPage = 3; }
     else if (currentPage === totalPages && totalPages >= 3) { startPage = totalPages - 2; }
     else if (totalPages < 3) { startPage = 1; endPage = totalPages; }
-    if (startPage < 1) startPage = 1;
-    if (endPage > totalPages) endPage = totalPages;
 
     for (let i = startPage; i <= endPage; i++) {
         const pageButton = createPaginationButton(i, i, i === currentPage);
@@ -467,12 +441,19 @@ function createPaginationButton(text, pageNumber, isActive = false) {
     return button;
 }
 
-// Get page from URL
+// Ambil page dan id dari URL
 function getPageFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     const pageParam = urlParams.get('page');
     const pageNumber = parseInt(pageParam);
     return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
+}
+
+function getIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idParam = urlParams.get('id');
+    const videoId = parseInt(idParam);
+    return (!isNaN(videoId) && videoId >= 0) ? videoId : null;
 }
 
 // Go To Page
@@ -490,21 +471,46 @@ pageInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') { triggerRedirectAd(); goToPageFromInput(); }
 });
 
-// Load JSON
+// Load JSON dan tampilkan video
 fetch('vip.json')
     .then(res => res.json())
     .then(async data => {
-        allVideos = data.videos.map((v, index) => ({ ...v, id: index }));
+        console.log('✅ Data JSON berhasil diambil:', data);
+
+        allVideos = data.videos.map(v => ({
+            ...v,
+            id: v.id // pakai id asli dari JSON
+        }));
+        console.log('🎬 Semua video setelah mapping:', allVideos);
+
         if (allVideos.length > 0) {
+            const videoId = getIdFromUrl();
+            console.log('🔎 Video ID dari URL:', videoId);
+
+            if (videoId !== null) {
+                const video = allVideos.find(v => v.id === videoId);
+                console.log('🎯 Video yang dipilih:', video);
+
+                if (video) {
+                    gallery.innerHTML = '';
+                    const card = await createVideoCard(video, 0);
+                    gallery.appendChild(card);
+                    infoPaginasi.textContent = `Menampilkan video ID ${video.id} dari ${allVideos.length}`;
+                    paginationContainer.innerHTML = ''; // sembunyikan pagination
+                    return;
+                }
+            }
+            // fallback ke pagination
             const initialPage = getPageFromUrl();
             await displayVideos(initialPage, false);
+
         } else {
             gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
         }
     })
     .catch(error => {
-        console.error('Gagal memuat videos.json:', error);
-        gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file videos.json ada.</p>';
+        console.error('❌ Gagal memuat vip.json:', error);
+        gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file vip.json ada.</p>';
     });
 
 // Mobile menu
@@ -523,6 +529,8 @@ menuButton.addEventListener('click', () => {
     }
 });
 </script>
+
+
 
     <script type='text/javascript'
         src='//sardineoctoberconnecting.com/5b/9b/7a/5b9b7a7dab949f5559d8fce454ac6f09.js'></script>
