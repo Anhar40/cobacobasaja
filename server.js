@@ -74,7 +74,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // ---------------------------------------------------
 // 3. Routes HTML
 // ---------------------------------------------------
-const htmlPages = ["index", "about", "login", "register", "eporner", ];
+const htmlPages = ["index", "about", "login", "register", "eporner", "vip"];
 htmlPages.forEach((page) => {
   app.get(`/${page === "index" ? "" : page}`, (req, res) => {
     res.sendFile(path.join(__dirname, "public", `${page}.html`));
