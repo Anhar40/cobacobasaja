@@ -316,11 +316,13 @@ fetch('vip.json')
             // Update Open Graph & Twitter Meta
             const description = `Tonton video: ${currentVideo.title} (${currentVideo.durasi || '?'} menit). Hanya di King Bokep!`;
             const currentUrl = window.location.href;
-            let imageUrl = currentVideo.thumbnail || null;
-            if (!imageUrl && currentVideo.thumbnail_encrypted) {
-                imageUrl = await decryptThumbnail(currentVideo.thumbnail_encrypted);
-            }
-            if (!imageUrl) imageUrl = 'https://videyindoviral.vercel.app/logo1.png';
+
+            // Gunakan endpoint /thumbnail?id=XX
+            let imageUrl = currentVideo.thumbnail
+                ? currentVideo.thumbnail
+                : (currentVideo.thumbnail_encrypted
+                    ? `/thumbnail?id=${videoId}`
+                    : 'https://videyindoviral.vercel.app/logo1.png');
 
             ogTitle.setAttribute('content', currentVideo.title);
             ogUrl.setAttribute('content', currentUrl);
