@@ -5,7 +5,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title id="pageTitle">Default Title</title>
-  <meta property="og:title" id="ogTitle" content="Default OG Title">
+    <meta property="og:title" id="ogTitle" content="Default OG Title">
+    <meta property="og:description" id="ogDescription" content="Deskripsi default video.">
+    <meta property="og:image" id="ogImage" content="https://videyindoviral.vercel.app/logo1.png">
+    <meta property="og:url" id="ogUrl" content="https://videyindoviral.vercel.app/">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Default Title">
+    <meta name="twitter:description" content="Deskripsi default video.">
+    <meta name="twitter:image" content="https://videyindoviral.vercel.app/logo1.png">
 
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -30,15 +37,14 @@
     <style>
         .video-aspect-ratio {
             padding-bottom: 56.25%;
+            /* 16:9 ratio */
             height: 0;
             position: relative;
         }
 
-        /* GRID REKOMENDASI RESPONSIVE BARU */
         .recommendation-grid {
             display: grid;
             grid-template-columns: repeat(2, minmax(0, 1fr));
-            /* Default: 2 kolom */
             gap: 1.5rem;
         }
 
@@ -48,23 +54,18 @@
             }
         }
 
-        /* MD: 3 kolom */
         @media (min-width: 1024px) {
             .recommendation-grid {
                 grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
 
-        /* LG: 4 kolom */
-
-        /* Gaya tambahan untuk kartu rekomendasi agar terlihat premium */
         .card-recommendation {
             border: 1px solid transparent;
         }
 
         .card-recommendation:hover {
             border-color: #6366F1;
-            /* border berubah saat hover */
         }
     </style>
 </head>
@@ -166,144 +167,255 @@
             </div>
         </div>
     </footer>
- <script>
-const AD_TAG_URLS = [
-    'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj',
-    'https://sardineoctoberconnecting.com/k17qp7n4r?key=7833125c99e2574000255bd7ba693d08'
-];
+    <script>
+        const AD_TAG_URLS = [
+            'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj',
+            'https://sardineoctoberconnecting.com/k17qp7n4r?key=7833125c99e2574000255bd7ba693d08'
+        ];
 
-function triggerRedirectAd() {
-    const randomIndex = Math.floor(Math.random() * AD_TAG_URLS.length);
-    const randomUrl = AD_TAG_URLS[randomIndex];
-    const newWindow = window.open(randomUrl, '_blank');
-    videoPlayer.removeEventListener('play', triggerRedirectAd);
-    if (newWindow) { newWindow.blur(); window.focus(); }
-}
-
-const videoPlayer = document.getElementById('videoPlayer');
-const videoTitleElement = document.getElementById('videoTitle');
-const recommendationGallery = document.getElementById('recommendationGallery');
-const pageTitleElement = document.getElementById('pageTitle');
-const shareButton = document.getElementById('shareButton');
-
-const ogTitle = document.getElementById('ogTitle');
-const ogUrl = document.getElementById('ogUrl');
-const ogDescription = document.getElementById('ogDescription');
-const ogImage = document.getElementById('ogImage');
-
-let allVideos = [];
-
-async function shareVideo() {
-    if (navigator.share) {
-        try { await navigator.share({ title: videoTitleElement.textContent, text: `Tonton sekarang: ${videoTitleElement.textContent} di King Bokep!`, url: window.location.href }); }
-        catch { alert('Gagal berbagi. Salin tautan ini secara manual: ' + window.location.href); }
-    } else {
-        navigator.clipboard.writeText(window.location.href).then(() => alert(`Tautan telah disalin: ${window.location.href}`)).catch(() => alert('Browser tidak mendukung Web Share API. Salin tautan secara manual: ' + window.location.href));
-    }
-}
-shareButton.addEventListener('click', shareVideo);
-
-async function decryptThumbnail(encrypted) {
-    try {
-        const ciphertext = Uint8Array.from(atob(encrypted.ciphertext), c => c.charCodeAt(0));
-        const nonce = Uint8Array.from(atob(encrypted.nonce), c => c.charCodeAt(0));
-        const tag = Uint8Array.from(atob(encrypted.tag), c => c.charCodeAt(0));
-        const keyBytes = Uint8Array.from(atob(encrypted.key), c => c.charCodeAt(0));
-        const cipherPlusTag = new Uint8Array(ciphertext.length + tag.length);
-        cipherPlusTag.set(ciphertext); cipherPlusTag.set(tag, ciphertext.length);
-        const cryptoKey = await crypto.subtle.importKey("raw", keyBytes, { name: "AES-GCM" }, false, ["decrypt"]);
-        const decrypted = await crypto.subtle.decrypt({ name: "AES-GCM", iv: nonce }, cryptoKey, cipherPlusTag);
-        return URL.createObjectURL(new Blob([decrypted], { type: 'image/jpeg' }));
-    } catch { return null; }
-}
-
-function getRandomVideos(currentVideoId, count) {
-    const filtered = allVideos.filter(v => v.id != currentVideoId); // <-- gunakan != untuk string & number
-    const shuffled = filtered.sort(() => 0.5 - Math.random());
-    return shuffled.slice(0, count);
-}
-
-async function createRecommendationCard(videoData) {
-    const card = document.createElement('a');
-    card.href = `video?id=${videoData.id}`;
-    card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer card-recommendation';
-
-    let thumbnailUrl = videoData.thumbnail || null;
-    if (!thumbnailUrl && videoData.thumbnail_encrypted) {
-        thumbnailUrl = await decryptThumbnail(videoData.thumbnail_encrypted);
-    }
-    if (!thumbnailUrl) thumbnailUrl = videoData.url + '#t=1';
-
-    card.innerHTML = `
-        <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
-            <video src="${videoData.url}" preload="metadata" class="absolute top-0 left-0 w-full h-full object-cover" muted playsinline poster="${thumbnailUrl}"></video>
-            <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
-            </div>
-        </div>
-        <div class="p-4 text-left">
-            <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${videoData.title}</h3>
-            <div class="text-xs text-gray-500 mt-1 flex items-center">
-                <i class="far fa-clock mr-1 text-accent"></i> <span class="font-medium">${videoData.durasi || '?'} menit</span>
-            </div>
-        </div>
-    `;
-    return card;
-}
-
-videoPlayer.addEventListener('play', triggerRedirectAd);
-
-fetch('vip.json')
-    .then(res => res.json())
-    .then(async data => {
-        if (!data.videos || !Array.isArray(data.videos)) throw new Error('Format JSON salah atau tidak ada videos array.');
-        allVideos = data.videos.map(v => ({ ...v, id: v.id }));
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const videoId = urlParams.get('id'); // <-- gunakan string langsung
-        const currentVideo = allVideos.find(v => v.id == videoId); // <-- == untuk string/number fleksibel
-
-        if (currentVideo) {
-            videoTitleElement.textContent = currentVideo.title;
-            pageTitleElement.textContent = `${currentVideo.title}`;
-            videoPlayer.src = currentVideo.url;
-
-            const description = `Tonton video: ${currentVideo.title} (${currentVideo.durasi || '?'} menit). Hanya di King Bokep!`;
-            const currentUrl = window.location.href;
-            const imageUrl = `https://videyindoviral.vercel.app/thumbnail?id=${videoId}`;
-
-            if (ogTitle) ogTitle.setAttribute('content', currentVideo.title);
-            if (ogUrl) ogUrl.setAttribute('content', currentUrl);
-            if (ogDescription) ogDescription.setAttribute('content', description);
-            if (ogImage) ogImage.setAttribute('content', imageUrl);
-            const twitterTitle = document.querySelector('meta[name="twitter:title"]');
-            if (twitterTitle) twitterTitle.setAttribute('content', currentVideo.title);
-            const twitterDesc = document.querySelector('meta[name="twitter:description"]');
-            if (twitterDesc) twitterDesc.setAttribute('content', description);
-            const twitterImg = document.querySelector('meta[name="twitter:image"]');
-            if (twitterImg) twitterImg.setAttribute('content', imageUrl);
-
-            // Rekomendasi
-            recommendationGallery.innerHTML = '';
-            const recommendations = getRandomVideos(currentVideo.id, 4);
-            for (const v of recommendations) {
-                const card = await createRecommendationCard(v);
-                recommendationGallery.appendChild(card);
-            }
-        } else {
-            videoTitleElement.textContent = 'Video Tidak Ditemukan';
-            const playerContainer = videoPlayer.parentNode;
-            playerContainer.innerHTML = '<div class="absolute inset-0 flex items-center justify-center bg-gray-900/90 text-red-400 text-xl font-semibold">Video tidak valid atau tidak ditemukan.</div>';
-            videoPlayer.style.display = 'none';
-            recommendationGallery.innerHTML = '<p class="text-red-400 col-span-full">ID video tidak valid atau tidak ditemukan.</p>';
+        function triggerRedirectAd() {
+            const randomIndex = Math.floor(Math.random() * AD_TAG_URLS.length);
+            const randomUrl = AD_TAG_URLS[randomIndex];
+            const newWindow = window.open(randomUrl, '_blank');
+            // Hapus event listener setelah iklan pertama di-trigger
+            videoPlayer.removeEventListener('play', triggerRedirectAd);
+            if (newWindow) { newWindow.blur(); window.focus(); } // Cobalah membuat window baru tidak fokus
         }
-    })
-    .catch(err => {
-        console.error('❌ Gagal memuat data JSON:', err);
-        videoTitleElement.textContent = 'Gagal Memuat Data Video';
-        recommendationGallery.innerHTML = '<p class="text-red-400 col-span-full">Gagal memuat rekomendasi.</p>';
-    });
-</script>
+
+        const videoPlayer = document.getElementById('videoPlayer');
+        const videoTitleElement = document.getElementById('videoTitle');
+        const recommendationGallery = document.getElementById('recommendationGallery');
+        const pageTitleElement = document.getElementById('pageTitle');
+        const shareButton = document.getElementById('shareButton');
+        const ogTitle = document.getElementById('ogTitle');
+        const ogUrl = document.getElementById('ogUrl');
+        const ogDescription = document.getElementById('ogDescription');
+        const ogImage = document.getElementById('ogImage');
+
+        // Mobile Menu Logic
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            } else {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            }
+        });
+
+        let allVideos = [];
+
+        async function shareVideo() {
+            if (navigator.share) {
+                try {
+                    await navigator.share({
+                        title: videoTitleElement.textContent,
+                        text: `Tonton sekarang: ${videoTitleElement.textContent} di King Bokep!`,
+                        url: window.location.href
+                    });
+                } catch (error) {
+                    if (error.name !== 'AbortError') { // Abaikan jika dibatalkan oleh pengguna
+                        alert('Gagal berbagi. Salin tautan ini secara manual: ' + window.location.href);
+                    }
+                }
+            } else {
+                // Fallback: Copy to clipboard
+                navigator.clipboard.writeText(window.location.href)
+                    .then(() => alert(`Tautan telah disalin: ${window.location.href}`))
+                    .catch(() => alert('Browser tidak mendukung Web Share API. Salin tautan secara manual: ' + window.location.href));
+            }
+        }
+        shareButton.addEventListener('click', shareVideo);
+
+
+        async function decryptThumbnail(encrypted) {
+            // Logika dekripsi ini hanya akan bekerja jika semua kunci dan algoritma
+            // sudah dikonfigurasi dengan benar di backend. Saya hanya memastikan sintaksnya benar.
+            try {
+                const ciphertext = Uint8Array.from(atob(encrypted.ciphertext), c => c.charCodeAt(0));
+                const nonce = Uint8Array.from(atob(encrypted.nonce), c => c.charCodeAt(0));
+                const tag = Uint8Array.from(atob(encrypted.tag), c => c.charCodeAt(0));
+                const keyBytes = Uint8Array.from(atob(encrypted.key), c => c.charCodeAt(0));
+                const cipherPlusTag = new Uint8Array(ciphertext.length + tag.length);
+                cipherPlusTag.set(ciphertext);
+                cipherPlusTag.set(tag, ciphertext.length);
+                const cryptoKey = await crypto.subtle.importKey("raw", keyBytes, {
+                    name: "AES-GCM"
+                }, false, ["decrypt"]);
+                const decrypted = await crypto.subtle.decrypt({
+                    name: "AES-GCM",
+                    iv: nonce
+                }, cryptoKey, cipherPlusTag);
+                return URL.createObjectURL(new Blob([decrypted], {
+                    type: 'image/jpeg'
+                }));
+            } catch (err) {
+                console.error("Gagal dekripsi thumbnail:", err);
+                return null;
+            }
+        }
+
+        function updateMetaTags(video) {
+            const currentUrl = window.location.href;
+            const description = `Tonton video: ${video.title} (${video.durasi || '?'} menit). Hanya di King Bokep!`;
+            // Gunakan properti thumbnail jika ada, jika tidak, fallback ke link thumbnail generik (seperti di awal)
+            const imageUrl = video.thumbnail || `https://videyindoviral.vercel.app/thumbnail?id=${video.id}`; 
+
+            // Perbarui tag HEAD
+            document.title = video.title; // Menggunakan document.title untuk memastikan perubahan di tab browser
+            pageTitleElement.textContent = video.title;
+
+            // Perbarui OG Tags
+            const metaTags = [{
+                id: 'ogTitle',
+                property: 'og:title',
+                content: video.title
+            }, {
+                id: 'ogUrl',
+                property: 'og:url',
+                content: currentUrl
+            }, {
+                id: 'ogDescription',
+                property: 'og:description',
+                content: description
+            }, {
+                id: 'ogImage',
+                property: 'og:image',
+                content: imageUrl
+            }, {
+                name: 'twitter:title',
+                content: video.title
+            }, {
+                name: 'twitter:description',
+                content: description
+            }, {
+                name: 'twitter:image',
+                content: imageUrl
+            }, ];
+
+            metaTags.forEach(tagInfo => {
+                let element;
+                if (tagInfo.id) {
+                    element = document.getElementById(tagInfo.id);
+                } else if (tagInfo.property) {
+                    element = document.querySelector(`meta[property="${tagInfo.property}"]`);
+                } else if (tagInfo.name) {
+                    element = document.querySelector(`meta[name="${tagInfo.name}"]`);
+                }
+
+                if (element) {
+                    element.setAttribute('content', tagInfo.content);
+                }
+            });
+        }
+
+        async function createRecommendationCard(videoData) {
+            const card = document.createElement('a');
+            card.href = `?id=${videoData.id}`; // Perbaiki agar mengarah ke halaman video yang sama dengan ID baru
+            card.className =
+                'group bg-card-dark rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer card-recommendation';
+
+            let thumbnailUrl = videoData.thumbnail || null;
+            if (!thumbnailUrl && videoData.thumbnail_encrypted) {
+                thumbnailUrl = await decryptThumbnail(videoData.thumbnail_encrypted);
+            }
+            // Fallback ke URL video dengan time offset sebagai poster (seperti di awal kode)
+            if (!thumbnailUrl) thumbnailUrl = videoData.url + '#t=1';
+
+            card.innerHTML = `
+                <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
+                    <img src="${thumbnailUrl}" alt="${videoData.title}" class="absolute top-0 left-0 w-full h-full object-cover" loading="lazy">
+                    <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                        <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
+                    </div>
+                </div>
+                <div class="p-4 text-left">
+                    <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${videoData.title}</h3>
+                    <div class="text-xs text-gray-500 mt-1 flex items-center">
+                        <i class="far fa-clock mr-1 text-accent"></i> <span class="font-medium">${videoData.durasi || '?'} menit</span>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // Hanya trigger iklan pop-under saat video dimainkan
+        videoPlayer.addEventListener('play', triggerRedirectAd);
+
+
+        // --- LOGIKA UTAMA MEMUAT DATA VIDEO ---
+        fetch('vip.json')
+            .then(res => {
+                if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                return res.json();
+            })
+            .then(async data => {
+                allVideos = data.videos || []; // Pastikan ada array videos
+                const urlParams = new URLSearchParams(window.location.search);
+                // Menggunakan ID default jika tidak ada di URL
+                const videoId = urlParams.get('id') || (allVideos.length > 0 ? allVideos[0].id : null); 
+                const currentVideo = allVideos.find(v => v.id == videoId);
+
+                if (currentVideo) {
+                    videoTitleElement.textContent = currentVideo.title;
+                    videoPlayer.src = currentVideo.url;
+
+                    // Set poster video utama
+                    let mainVideoPoster = currentVideo.thumbnail || null;
+                    if (!mainVideoPoster && currentVideo.thumbnail_encrypted) {
+                        mainVideoPoster = await decryptThumbnail(currentVideo.thumbnail_encrypted);
+                    }
+                    if (mainVideoPoster) {
+                        videoPlayer.setAttribute('poster', mainVideoPoster);
+                    } else {
+                        videoPlayer.removeAttribute('poster'); // Hapus jika tidak ada poster yang valid
+                    }
+                    
+                    updateMetaTags(currentVideo);
+
+                    // --- Rekomendasi ---
+                    recommendationGallery.innerHTML = '';
+                    // Ambil 4 video acak yang bukan video yang sedang ditonton
+                    const recommendations = allVideos.filter(v => v.id != currentVideo.id).sort(() => 0.5 - Math.random()).slice(0, 4);
+
+                    if (recommendations.length > 0) {
+                        for (const v of recommendations) {
+                            const card = await createRecommendationCard(v); // Pastikan menggunakan await
+                            recommendationGallery.appendChild(card);
+                        }
+                    } else {
+                        recommendationGallery.innerHTML =
+                            '<p class="text-gray-500 col-span-full">Tidak ada video rekomendasi lain yang tersedia.</p>';
+                    }
+
+                } else {
+                    // Penanganan video tidak ditemukan
+                    videoTitleElement.textContent = 'Video Tidak Ditemukan 😔';
+                    videoPlayer.style.display = 'none';
+                    document.querySelector('.video-aspect-ratio').innerHTML =
+                        '<p class="text-center p-10 text-xl text-red-400">ID video tidak valid atau tidak ditemukan.</p>';
+                    recommendationGallery.innerHTML =
+                        '<p class="text-red-400 col-span-full">ID video tidak valid atau tidak ditemukan.</p>';
+                    updateMetaTags({
+                        title: 'Video Tidak Ditemukan',
+                        url: '',
+                        durasi: '0',
+                        id: 'error'
+                    });
+                }
+            })
+            .catch(err => {
+                console.error('❌ Gagal memuat data JSON:', err);
+                videoTitleElement.textContent = 'Gagal Memuat Data Video';
+                recommendationGallery.innerHTML =
+                    '<p class="text-red-400 col-span-full">Gagal memuat data atau koneksi bermasalah.</p>';
+            });
+    </script>
 
 
     <script type='text/javascript'

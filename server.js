@@ -74,7 +74,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // ---------------------------------------------------
 // 3. Routes HTML
 // ---------------------------------------------------
-const htmlPages = ["index", "about", "login", "register", "eporner", "video"];
+const htmlPages = ["index", "about", "login", "register", "eporner", ];
 htmlPages.forEach((page) => {
   app.get(`/${page === "index" ? "" : page}`, (req, res) => {
     res.sendFile(path.join(__dirname, "public", `${page}.html`));
@@ -123,8 +123,8 @@ app.get("/thumbnail", async (req, res) => {
   }
 });
 
-app.get('/video/:id', async (req, res) => {
-  const videoId = req.params.id;
+app.get('/video', async (req, res) => {
+  const videoId = req.query.id;
 
   try {
     const data = await fetch('https://videyindoviral.vercel.app/vip.json').then(r => r.json());
@@ -132,34 +132,34 @@ app.get('/video/:id', async (req, res) => {
 
     if (!video) return res.status(404).send('Video tidak ditemukan');
 
-    // HTML dinamis dengan OG tags
-    res.send(`
-      <!DOCTYPE html>
-      <html lang="id">
-      <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>${video.title} | King Bokep</title>
-        <meta property="og:title" content="${video.title}" />
-        <meta property="og:description" content="Tonton video: ${video.title} (${video.durasi}) menit." />
-        <meta property="og:image" content="https://videyindoviral.vercel.app/thumbnail?id=${video.id}" />
-        <meta property="og:url" content="https://videyindoviral.vercel.app/video/${video.id}" />
-        <meta name="twitter:card" content="summary_large_image" />
-      </head>
-      <body>
-        <h1>${video.title}</h1>
-        <video width="600" controls>
-          <source src="${video.url}" type="video/mp4">
-          Your browser does not support the video tag.
-        </video>
-      </body>
-      </html>
+    // Baca file HTML statis
+    const htmlPath = path.join(__dirname, 'public', 'video.html');
+    let html = fs.readFileSync(htmlPath, 'utf8');
+
+    // Ganti title
+    html = html.replace(/<title>.*<\/title>/, `<title>${video.title} | King Bokep</title>`);
+
+    // Ganti OG tags
+    html = html.replace(/<meta property="og:title" content=".*" ?\/?>/, `<meta property="og:title" content="${video.title}" />`);
+    html = html.replace(/<meta property="og:description" content=".*" ?\/?>/, `<meta property="og:description" content="Tonton video: ${video.title} (${video.durasi}) menit." />`);
+    html = html.replace(/<meta property="og:image" content=".*" ?\/?>/, `<meta property="og:image" content="https://videyindoviral.vercel.app/thumbnail?id=${video.id}" />`);
+    html = html.replace(/<meta property="og:url" content=".*" ?\/?>/, `<meta property="og:url" content="https://videyindoviral.vercel.app/video?id=${video.id}" />`);
+
+    // Ganti video src dan poster
+    html = html.replace(/<video[^>]*id="videoPlayer"[^>]*>.*<\/video>/s, `
+      <video id="videoPlayer" controls poster="https://videyindoviral.vercel.app/thumbnail?id=${video.id}" class="absolute top-0 left-0 w-full h-full bg-black focus:outline-none">
+        <source src="${video.url}" type="video/mp4">
+        Browser Anda tidak mendukung tag video.
+      </video>
     `);
+
+    res.send(html);
   } catch (err) {
     console.error(err);
     res.status(500).send('Terjadi kesalahan server');
   }
 });
+
 
 // ---------------------------------------------------
 // 5. Server Start
