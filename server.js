@@ -15,7 +15,7 @@ const __dirname = path.dirname(__filename);
 // ---------------------------------------------------
 // 1. PROXY ANTI-CLOUDFLARE MENGGUNAKAN PUPPETEER
 // ---------------------------------------------------
-pp.get("/proxy-api", async (req, res) => {
+app.get("/proxy-api", async (req, res) => {
     try {
         const url = "https://www.eporner.com/api/v2/video/search/";
 
