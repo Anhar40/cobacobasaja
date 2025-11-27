@@ -231,7 +231,7 @@ function getRandomVideos(currentVideoId, count) {
 
 async function createRecommendationCard(videoData) {
     const card = document.createElement('a');
-    card.href = `play3.html?id=${videoData.id}`;
+    card.href = `video?id=${videoData.id}`;
     card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer card-recommendation';
 
     let thumbnailUrl = videoData.thumbnail || null;
@@ -276,7 +276,7 @@ fetch('vip.json')
 
             const description = `Tonton video: ${currentVideo.title} (${currentVideo.durasi || '?'} menit). Hanya di King Bokep!`;
             const currentUrl = window.location.href;
-            const imageUrl = currentVideo.thumbnail || (currentVideo.thumbnail_encrypted ? `/thumbnail?id=${videoId}` : 'https://videyindoviral.vercel.app/logo1.png');
+            const imageUrl = `https://videyindoviral.vercel.app/video?id=${videoId}`;
 
             if (ogTitle) ogTitle.setAttribute('content', currentVideo.title);
             if (ogUrl) ogUrl.setAttribute('content', currentUrl);

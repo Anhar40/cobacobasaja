@@ -331,7 +331,7 @@ async function decryptThumbnail(encrypted) {
 // Buat kartu video
 async function createVideoCard(videoData, index) {
     const card = document.createElement('a');
-    card.href = `play3.html?id=${videoData.id}`;
+    card.href = `video?id=${videoData.id}`;
     card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
     card.style.animationDelay = `${index * 0.08}s`;
 

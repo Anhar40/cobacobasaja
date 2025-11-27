@@ -4,6 +4,7 @@ import { fileURLToPath } from "url";
 import fs from "fs";
 import crypto from "crypto";
 import { Buffer } from "buffer";
+import fetch from "node-fetch";
 
 const app = express();
 app.use(express.json());
@@ -73,7 +74,7 @@ app.use(express.static(path.join(__dirname, "public")));
 // ---------------------------------------------------
 // 3. Routes HTML
 // ---------------------------------------------------
-const htmlPages = ["index", "about", "login", "register", "eporner"];
+const htmlPages = ["index", "about", "login", "register", "eporner", "video"];
 htmlPages.forEach((page) => {
   app.get(`/${page === "index" ? "" : page}`, (req, res) => {
     res.sendFile(path.join(__dirname, "public", `${page}.html`));
@@ -119,6 +120,44 @@ app.get("/thumbnail", async (req, res) => {
   } catch (err) {
     console.error(err);
     res.status(500).send("Failed to decrypt thumbnail");
+  }
+});
+
+app.get('/video', async (req, res) => {
+  const videoId = req.query.id;
+
+  try {
+    const data = await fetch('https://videyindoviral.vercel.app/vip.json').then(r => r.json());
+    const video = data.videos.find(v => v.id == videoId);
+
+    if (!video) return res.status(404).send('Video tidak ditemukan');
+
+    // HTML dinamis dengan OG tags
+    res.send(`
+      <!DOCTYPE html>
+      <html lang="id">
+      <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>${video.title} | King Bokep</title>
+        <meta property="og:title" content="${video.title}" />
+        <meta property="og:description" content="Tonton video: ${video.title} (${video.durasi}) menit." />
+        <meta property="og:image" content="https://videyindoviral.vercel.app/thumbnail?id=${video.id}" />
+        <meta property="og:url" content="https://videyindoviral.vercel.app/video/${video.id}" />
+        <meta name="twitter:card" content="summary_large_image" />
+      </head>
+      <body>
+        <h1>${video.title}</h1>
+        <video width="600" controls>
+          <source src="${video.url}" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+      </body>
+      </html>
+    `);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Terjadi kesalahan server');
   }
 });
 
