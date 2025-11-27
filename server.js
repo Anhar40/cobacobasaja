@@ -123,41 +123,111 @@ app.get("/thumbnail", async (req, res) => {
   }
 });
 
+// Asumsi 'fetch' sudah tersedia (misalnya, jika Anda menggunakan Node 18+ atau library 'node-fetch')
+// const fetch = require('node-fetch'); // Jika Anda menggunakan versi Node.js yang lebih lama
+
 app.get('/video', async (req, res) => {
-  const videoId = req.query.id;
+    const videoId = req.query.id;
+    const baseUrl = 'https://videyindoviral.vercel.app'; // Definisikan base URL untuk kemudahan
 
-  try {
-    const data = await fetch('https://videyindoviral.vercel.app/vip.json').then(r => r.json());
-    const video = data.videos.find(v => v.id == videoId);
+    if (!videoId) {
+        // Handle jika ID tidak ada (misalnya, redirect ke halaman utama)
+        return res.redirect('/'); 
+    }
 
-    if (!video) return res.status(404).send('Video tidak ditemukan');
+    try {
+        // 1. Ambil data video
+        const data = await fetch(`${baseUrl}/vip.json`).then(r => r.json());
+        const video = data.videos.find(v => v.id == videoId);
 
-    // Baca file HTML statis
-    const htmlPath = path.join(__dirname, 'public', 'video.html');
-    let html = fs.readFileSync(htmlPath, 'utf8');
+        if (!video) {
+            return res.status(404).send('Video tidak ditemukan');
+        }
 
-    // Ganti title
-    html = html.replace(/<title>.*<\/title>/, `<title>${video.title} | King Bokep</title>`);
+        const description = `Tonton video: ${video.title} (${video.durasi || '??'} menit). Hanya di King Bokep!`;
+        const imageUrl = `${baseUrl}/thumbnail?id=${video.id}`;
+        const videoUrl = `${baseUrl}/video?id=${video.id}`;
 
-    // Ganti OG tags
-    html = html.replace(/<meta property="og:title" content=".*" ?\/?>/, `<meta property="og:title" content="${video.title}" />`);
-    html = html.replace(/<meta property="og:description" content=".*" ?\/?>/, `<meta property="og:description" content="Tonton video: ${video.title} (${video.durasi}) menit." />`);
-    html = html.replace(/<meta property="og:image" content=".*" ?\/?>/, `<meta property="og:image" content="https://videyindoviral.vercel.app/thumbnail?id=${video.id}" />`);
-    html = html.replace(/<meta property="og:url" content=".*" ?\/?>/, `<meta property="og:url" content="https://videyindoviral.vercel.app/video?id=${video.id}" />`);
+        // 2. Baca file HTML statis
+        // Pastikan path ke 'video.html' sudah benar relative terhadap file server Anda
+        const htmlPath = path.join(__dirname, 'public', 'video.html'); 
+        let html = fs.readFileSync(htmlPath, 'utf8');
 
-    // Ganti video src dan poster
-    html = html.replace(/<video[^>]*id="videoPlayer"[^>]*>.*<\/video>/s, `
-      <video id="videoPlayer" controls poster="https://videyindoviral.vercel.app/thumbnail?id=${video.id}" class="absolute top-0 left-0 w-full h-full bg-black focus:outline-none">
-        <source src="${video.url}" type="video/mp4">
-        Browser Anda tidak mendukung tag video.
-      </video>
-    `);
+        // 3. Penggantian Konten
+        
+        // A. Ganti HTML <title>
+        // Menggunakan regex yang lebih spesifik untuk tag <title>
+        html = html.replace(/<title>.*?<\/title>/s, `<title>${video.title} | King Bokep</title>`);
 
-    res.send(html);
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Terjadi kesalahan server');
-  }
+        // B. Ganti Open Graph (OG) Tags (Menggunakan regex non-greedy [^"]* )
+        
+        // OG Title
+        html = html.replace(
+            /<meta property="og:title" content="[^"]*" \/?>/, 
+            `<meta property="og:title" content="${video.title}" />`
+        );
+        
+        // OG Description
+        html = html.replace(
+            /<meta property="og:description" content="[^"]*" \/?>/, 
+            `<meta property="og:description" content="${description}" />`
+        );
+        
+        // OG Image
+        html = html.replace(
+            /<meta property="og:image" content="[^"]*" \/?>/, 
+            `<meta property="og:image" content="${imageUrl}" />`
+        );
+        
+        // OG URL
+        html = html.replace(
+            /<meta property="og:url" content="[^"]*" \/?>/, 
+            `<meta property="og:url" content="${videoUrl}" />`
+        );
+
+        // C. Ganti Twitter Card Tags (PENTING untuk X/Twitter)
+
+        // Twitter Title
+        html = html.replace(
+            /<meta name="twitter:title" content="[^"]*" \/?>/,
+            `<meta name="twitter:title" content="${video.title}" />`
+        );
+        
+        // Twitter Description
+        html = html.replace(
+            /<meta name="twitter:description" content="[^"]*" \/?>/,
+            `<meta name="twitter:description" content="${description}" />`
+        );
+        
+        // Twitter Image
+        html = html.replace(
+            /<meta name="twitter:image" content="[^"]*" \/?>/,
+            `<meta name="twitter:image" content="${imageUrl}" />`
+        );
+        
+        // D. Ganti Video Player SRC dan POSTER
+        // Memasukkan tag <source> di dalam tag <video>
+        // Menggunakan [^>]* untuk menghindari penangkapan berlebihan
+        html = html.replace(
+            /<video[^>]*id="videoPlayer"[^>]*>.*?<\/video>/s, 
+            `
+            <div class="video-aspect-ratio bg-black rounded-xl overflow-hidden shadow-3xl border border-gray-800">
+                <video id="videoPlayer" controls poster="${imageUrl}" class="absolute top-0 left-0 w-full h-full bg-black focus:outline-none">
+                    <source src="${video.url}" type="video/mp4">
+                    Browser Anda tidak mendukung tag video.
+                </video>
+            </div>
+            `
+        );
+
+
+        // 4. Kirim HTML yang sudah diproses
+        res.send(html);
+        
+    } catch (err) {
+        console.error('Terjadi kesalahan saat memproses video:', err);
+        res.status(500).send('Terjadi kesalahan server saat memuat data video.');
+    }
 });
 
 
