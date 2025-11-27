@@ -8,17 +8,14 @@
     <title>King Bokep | Galeri Vidio Viral</title>
     <meta name="description" content="Koleksi vidio viral dewasa terbaru. Jelajahi galeri, putar, dan nikmati koleksi terpopuler dari King Bokep." />
 
-    <!-- Canonical -->
     <link rel="canonical" href="https://videyindoviral.vercel.app/" />
 
-    <!-- Basic SEO -->
     <meta name="author" content="King Bokep" />
     <meta name="robots" content="index, follow, max-snippet:200, max-image-preview:large" />
     <meta name="rating" content="adult" />
     <meta name="contentRating" content="18+" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
 
-    <!-- Open Graph -->
     <meta property="og:locale" content="id_ID" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="King Bokep" />
@@ -29,23 +26,18 @@
     <meta property="og:image:alt" content="King Bokep — Galeri Vidio Viral" />
     <meta property="og:restrictions:age" content="18+" />
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="King Bokep — Galeri Vidio Viral" />
     <meta name="twitter:description" content="Koleksi vidio viral dewasa terbaru. Jelajahi galeri, putar, dan nikmati koleksi terpopuler." />
     <meta name="twitter:image" content="https://videyindoviral.vercel.app/gambar.jpg" />
 
-    <!-- Preload utama -->
     <link rel="preload" href="https://videyindoviral.vercel.app/gambar.jpg" as="image" />
     <link rel="preconnect" href="https://videyindoviral.vercel.app" crossorigin />
 
-    <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -63,10 +55,8 @@
         }
     </script>
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- JSON-LD WebSite -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -89,7 +79,6 @@
         }
     </script>
 
-    <!-- JSON-LD Collection Page -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -102,7 +91,6 @@
         }
     </script>
 
-    <!-- Styles -->
     <style>
         .animate-fadeIn {
             animation: fadeIn 0.5s ease-out forwards;
@@ -167,13 +155,13 @@
         
         <div id="mobileMenu" class="hidden md:hidden pb-4 pt-2 border-t border-gray-700">
             <nav class="px-2 pt-2 pb-3 space-y-1">
-                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-700 hover:bg-gray-600 transition">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition">
                     <i class="fas fa-home mr-2"></i> GALERI
                 </a>
                 <a href="/tentang" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition">
                     <i class="fas fa-info-circle mr-2"></i> TENTANG
                 </a>
-                <a href="/eporner" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                <a href="/eporner" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-700 hover:bg-gray-600 transition">
                     <i class="fas fa-video mr-2"></i> EPORNER
                 </a>
                 <a href="/login" class="block w-full text-center mt-3 px-3 py-2 bg-accent text-white rounded-md text-base font-semibold hover:bg-accent/90 transition shadow-lg shadow-accent/30">
@@ -189,19 +177,41 @@
         <header class="mb-12 text-center max-w-3xl mx-auto">
             <p class="text-sm font-semibold uppercase text-accent mb-2 tracking-widest">King's Collection</p>
             <h2 class="text-4xl sm:text-5xl font-extrabold text-white mb-3 leading-tight">Galeri Vidio <span
-                    class="text-accent">Viral</span> Terbaru</h2>
+                        class="text-accent">Viral</span> Terbaru</h2>
             <p class="text-lg text-gray-400">Jelajahi koleksi premium, paling dicari, dan terpopuler yang selalu
                 ter-update.</p>
         </header>
         <div class="max-w-7xl mx-auto">
+            <div class="mb-8 flex flex-col sm:flex-row justify-center items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                <input type="text" id="searchInput" placeholder="Cari video (mis. Indoviral, Jepang)..."
+                    class="w-full sm:w-80 px-4 py-2 border border-gray-700 rounded-lg focus:ring-accent focus:border-accent bg-gray-800 text-gray-100 placeholder-gray-500 text-sm">
+                <select id="sortSelect"
+                    class="w-full sm:w-40 px-4 py-2 border border-gray-700 rounded-lg focus:ring-accent focus:border-accent bg-gray-800 text-gray-100 text-sm">
+                    <option value="latest">Terbaru</option>
+                    <option value="views">Terpopuler</option>
+                    <option value="rating">Rating Tertinggi</option>
+                </select>
+                <button id="searchButton"
+                    class="w-full sm:w-auto px-6 py-2 bg-accent text-white rounded-lg font-semibold text-sm hover:bg-indigo-700 transition duration-300 shadow-lg shadow-accent/30">
+                    Filter <i class="fas fa-search ml-1"></i>
+                </button>
+            </div>
             <div class="video-grid" id="videoGallery">
+                </div>
+            
+            <div id="loadingIndicator" class="text-center col-span-full mt-10 text-gray-400 text-xl hidden">
+                <i class="fas fa-spinner fa-spin mr-2"></i> Memuat video...
+            </div>
+
+            <div id="errorMessage" class="text-center col-span-full mt-10 text-red-400 text-xl hidden">
+                Gagal memuat data video.
             </div>
 
             <div
                 class="mt-12 flex flex-col md:flex-row justify-center md:justify-between items-center space-y-6 md:space-y-0 p-4 rounded-xl bg-card-dark/50 border border-gray-800">
                 <p id="infoPaginasi" class="text-center text-sm text-gray-400 font-medium"></p>
                 <div id="paginationContainer" class="flex justify-center space-x-2">
-                </div>
+                    </div>
 
                 <div class="flex items-center space-x-2">
                     <label for="pageInput"
@@ -247,12 +257,37 @@
         const infoPaginasi = document.getElementById('infoPaginasi');
         const pageInput = document.getElementById('pageInput');
         const goToPageButton = document.getElementById('goToPageButton');
+        const loadingIndicator = document.getElementById('loadingIndicator');
+        const errorMessage = document.getElementById('errorMessage');
+        const searchInput = document.getElementById('searchInput');
+        const sortSelect = document.getElementById('sortSelect');
+        const searchButton = document.getElementById('searchButton');
 
-        const VIDEOS_PER_PAGE = 8;
+        // --- KONFIGURASI API EPORNER ---
+        const EPORNER_API_URL = 'https://www.eporner.com/api/v2/video/search/';
+        const API_KEY = 'YOUR_EPORNER_API_KEY'; // Ganti dengan API Key Anda jika ada
+
+        // Jumlah video yang ditampilkan di UI per halaman
+        const VIDEOS_PER_PAGE = 8; 
+        
+        // Catatan: Jumlah yang diminta ke API Eporner (parameter 'per_page') 
+        // akan kita set sesuai dengan VIDEOS_PER_PAGE ini.
+
         const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
 
-        let allVideos = [];
         let currentPage = 1;
+        let totalVideos = 0;
+        let totalPages = 1;
+        let currentSearch = '';
+        let currentOrder = 'latest'; // Default sorting
+
+        // Fungsi bantu untuk mengubah format durasi dari detik ke "X menit"
+        function formatDuration(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            const paddedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
+            return `${minutes}:${paddedSeconds}`;
+        }
 
         // Fungsionalitas Iklan: TIDAK BERUBAH
         function triggerRedirectAd() {
@@ -260,99 +295,111 @@
             if (newWindow) { newWindow.blur(); window.focus(); }
         }
 
-        // Fungsionalitas Durasi: TIDAK BERUBAH
-        function getDurationFromVideo(videoUrl) {
-            return new Promise((resolve, reject) => {
-                const videoElement = document.createElement('video');
-
-                videoElement.preload = 'metadata';
-                videoElement.crossOrigin = 'anonymous';
-
-                videoElement.onloadedmetadata = function () {
-                    window.URL.revokeObjectURL(videoUrl);
-                    const minutes = Math.ceil(videoElement.duration / 60);
-                    resolve(minutes);
-                };
-
-                videoElement.onerror = function () {
-                    reject('?');
-                };
-
-                videoElement.src = videoUrl;
-            });
-        }
-
-        // Fungsionalitas Pembuatan Kartu Video: Diperbarui class CSS
+        // Fungsionalitas Pembuatan Kartu Video: Diperbarui untuk properti API yang dikonfirmasi
         function createVideoCard(videoData, index) {
             const card = document.createElement('a');
 
-            card.href = `play.html?id=${videoData.id}`;
-            // LOGIC IKLAN ASLI: IKLAN TIDAK ADA DI KLIK KARTU VIDEO
-            // card.addEventListener('click', (e) => { triggerRedirectAd(); }); // DIHAPUS
+            // URL ke halaman detail, menggunakan properti 'url' dari respons JSON.
+            // Gunakan ID video jika Anda memiliki halaman 'play.html' lokal yang memproses ID ini.
+            
+            card.href = `play2.html?id=${videoData.id}`; 
 
             card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
-            card.style.animationDelay = `${index * 0.08}s`; // Delay animasi sedikit diperlambat
+            card.style.animationDelay = `${index * 0.08}s`; 
 
-            // HTML Kartu Diperbarui
+            // Menggunakan properti 'default_thumb.src' untuk thumbnail
+            const thumbnailUrl = videoData.default_thumb?.src || 'https://via.placeholder.com/320x180.png?text=No+Preview'; 
+            
+            // Menggunakan properti 'length_sec' dan memformatnya.
+            const durationFormatted = formatDuration(videoData.length_sec || 0); 
+            const title = videoData.title || 'Video Tanpa Judul';
+
             card.innerHTML = `
                 <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
-                    <video 
-                        src="${videoData.url}" 
-                        preload="metadata" 
-                        class="absolute top-0 left-0 w-full h-full object-cover"
-                        muted
-                        playsinline>
-                        Browser Anda tidak mendukung tag video.
-                    </video>
-                    
+                    <img src="${thumbnailUrl}" alt="Thumbnail ${title}" 
+                        class="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onerror="this.onerror=null;this.src='https://via.placeholder.com/320x180.png?text=No+Preview'" 
+                        loading="lazy" />
+
                     <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
                         bg-black/40 opacity-0 group-hover:opacity-100 
                         transition-opacity duration-300">
                         <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
                     </div>
+                    
+                    <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full z-10 font-semibold">
+                        <i class="far fa-clock mr-1"></i> ${durationFormatted}
+                    </div>
                 </div>
                 <div class="p-4 text-left">
-                    <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${videoData.title}</h3>
+                    <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${title}</h3>
                     <div class="text-xs text-gray-500 mt-1 flex items-center">
-                        <i class="far fa-clock mr-1 text-accent"></i> <span class="font-medium">${videoData.duration || '?'} menit</span>
+                        <i class="fas fa-eye mr-1 text-accent"></i> <span class="font-medium">${(videoData.views || 0).toLocaleString()}x ditonton</span>
+                        <span class="ml-3 text-yellow-500">
+                            <i class="fas fa-star"></i> ${(parseFloat(videoData.rate) * 10).toFixed(1) || '0.0'}
+                        </span>
                     </div>
                 </div>
             `;
 
-
-            // Logika Durasi: TIDAK BERUBAH
-            getDurationFromVideo(videoData.url)
-                .then(duration => {
-                    const durationElement = card.querySelector(`#duration-${videoData.id}`);
-                    if (durationElement) {
-                        durationElement.textContent = `${duration} menit`;
-                    }
-                })
-                .catch(error => {
-                    const durationElement = card.querySelector(`#duration-${videoData.id}`);
-                    if (durationElement) {
-                        durationElement.textContent = `? menit`;
-                    }
-                });
-
             return card;
         }
 
-        // Fungsionalitas Display Videos: TIDAK BERUBAH
-        function displayVideos(page, updateUrl = true) {
-            const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
+        // Fungsionalitas Ambil Data dari API Eporner
+        async function fetchVideos(page, query, order) {
+            loadingIndicator.classList.remove('hidden');
+            gallery.innerHTML = '';
+            errorMessage.classList.add('hidden');
 
-            if (page < 1) page = 1;
-            if (page > totalPages) page = totalPages;
+            const params = new URLSearchParams({
+                action: 'search',
+                query: query,
+                order: order,
+                per_page: VIDEOS_PER_PAGE, // Meminta sesuai yang ditampilkan di UI
+                page: page,
+                // api_key: API_KEY // Hapus atau gunakan jika Anda punya API Key
+            });
+            
+            const apiUrl = `${EPORNER_API_URL}?${params.toString()}`;
 
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                if (data.videos && data.videos.length > 0) {
+                    // Menggunakan data total yang lebih akurat dari respons JSON
+                    totalVideos = data.total_count || 0;
+                    totalPages = data.total_pages || Math.ceil(totalVideos / VIDEOS_PER_PAGE);
+                    
+                    displayVideos(data.videos, data.page, totalVideos, data.count, totalPages, false);
+
+                } else {
+                    gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
+                    totalVideos = 0;
+                    totalPages = 1;
+                    renderPagination(totalPages);
+                    infoPaginasi.textContent = 'Menampilkan 0 video.';
+                }
+            } catch (error) {
+                console.error('Gagal memuat video dari Eporner API:', error);
+                errorMessage.classList.remove('hidden');
+                gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Coba lagi nanti.</p>';
+                totalVideos = 0;
+                totalPages = 1;
+            } finally {
+                loadingIndicator.classList.add('hidden');
+            }
+        }
+
+        // Fungsionalitas Display Videos: Diperbarui dengan data pagination yang akurat
+        function displayVideos(videosOnPage, page, total, count, totalPages, updateUrl = true) {
             currentPage = page;
             gallery.innerHTML = '';
             window.scrollTo({ top: 0, behavior: 'smooth' });
-
-            const startIndex = (page - 1) * VIDEOS_PER_PAGE;
-            const endIndex = startIndex + VIDEOS_PER_PAGE;
-            const videosOnPage = allVideos.slice(startIndex, endIndex);
-
+            
             videosOnPage.forEach((v, index) => {
                 const card = createVideoCard(v, index);
                 gallery.appendChild(card);
@@ -360,17 +407,22 @@
 
             renderPagination(totalPages);
 
-            infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, allVideos.length)} dari ${allVideos.length} video. (Halaman ${currentPage} dari ${totalPages})`;
+            const startIndex = (page - 1) * VIDEOS_PER_PAGE;
+            const endIndex = startIndex + count;
+
+            infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, total).toLocaleString()} dari ${total.toLocaleString()} video. (Halaman ${currentPage.toLocaleString()} dari ${totalPages.toLocaleString()})`;
+            
             pageInput.value = currentPage;
             pageInput.max = totalPages;
+            pageInput.min = 1;
 
             if (updateUrl) {
-                const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
+                const newUrl = `${window.location.pathname}?page=${currentPage}&query=${currentSearch}&order=${currentOrder}${window.location.hash}`;
                 window.history.pushState({ path: newUrl }, '', newUrl);
             }
         }
 
-        // Fungsionalitas Render Pagination: Diperbarui class CSS
+        // Fungsionalitas Render Pagination: TIDAK BERUBAH (menggunakan totalPages yang sudah didapat)
         function renderPagination(totalPages) {
             paginationContainer.innerHTML = '';
             if (totalPages <= 1) return;
@@ -380,11 +432,15 @@
 
             let startPage = Math.max(1, currentPage - 1);
             let endPage = Math.min(totalPages, currentPage + 1);
-            if (currentPage === 1 && totalPages >= 3) { endPage = 3; }
-            else if (currentPage === totalPages && totalPages >= 3) { startPage = totalPages - 2; }
+            
+            if (currentPage === 1 && totalPages >= 3) { endPage = Math.min(3, totalPages); }
+            else if (currentPage === totalPages && totalPages >= 3) { startPage = Math.max(1, totalPages - 2); }
             else if (totalPages < 3) { startPage = 1; endPage = totalPages; }
+            
             if (startPage < 1) startPage = 1;
             if (endPage > totalPages) endPage = totalPages;
+            if (startPage > endPage) startPage = endPage;
+
 
             for (let i = startPage; i <= endPage; i++) {
                 const pageButton = createPaginationButton(i, i, i === currentPage);
@@ -395,7 +451,7 @@
             paginationContainer.appendChild(nextButton);
         }
 
-        // Fungsionalitas Create Pagination Button: Diperbarui class CSS
+        // Fungsionalitas Create Pagination Button: Diperbarui untuk memanggil fetchVideos
         function createPaginationButton(text, pageNumber, isActive = false) {
             const button = document.createElement('button');
             button.innerHTML = text;
@@ -404,75 +460,85 @@
 
             if (isActive) {
                 button.className = `${baseClasses} bg-accent text-white ring-2 ring-indigo-300/50`;
-            } else if (pageNumber < 1 || pageNumber > Math.ceil(allVideos.length / VIDEOS_PER_PAGE)) {
+            } else if (pageNumber < 1 || pageNumber > totalPages) {
                 button.className = `${baseClasses} bg-gray-800 text-gray-600 cursor-not-allowed`;
                 button.disabled = true;
             } else {
                 button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:text-white`;
                 button.onclick = () => {
-                    // LOGIC IKLAN ASLI: IKLAN TIDAK ADA DI KLIK PAGINASI
-                    // triggerRedirectAd(); // DIHAPUS 
-                    displayVideos(pageNumber);
+                    fetchVideos(pageNumber, currentSearch, currentOrder);
                 };
             }
             return button;
         }
 
-        // Fungsionalitas Get Page From URL: TIDAK BERUBAH
-        function getPageFromUrl() {
+        // Fungsionalitas Get Initial Params From URL: TIDAK BERUBAH
+        function getInitialParamsFromUrl() {
             const urlParams = new URLSearchParams(window.location.search);
             const pageParam = urlParams.get('page');
+            const queryParam = urlParams.get('query');
+            const orderParam = urlParams.get('order');
+
             const pageNumber = parseInt(pageParam);
-            return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
+            
+            return {
+                page: (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1,
+                query: queryParam || '',
+                order: orderParam || 'latest'
+            };
         }
 
         // Fungsionalitas Go To Page: LOGIC IKLAN DIPERTAHANKAN
         function goToPageFromInput() {
-            // LOGIC IKLAN ASLI: IKLAN DIPERTAHANKAN PADA TOMBOL GO SAJA
             triggerRedirectAd();
             let page = parseInt(pageInput.value);
-            const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
+            
             if (isNaN(page) || page < 1) { page = 1; }
             else if (page > totalPages) { page = totalPages; }
-            displayVideos(page);
+            fetchVideos(page, currentSearch, currentOrder);
+        }
+
+        // Fungsionalitas Search/Filter
+        function handleSearchAndFilter() {
+            currentSearch = searchInput.value.trim();
+            currentOrder = sortSelect.value;
+            triggerRedirectAd(); // Iklan saat tombol filter diklik
+            fetchVideos(1, currentSearch, currentOrder);
         }
 
         goToPageButton.addEventListener('click', goToPageFromInput);
         pageInput.addEventListener('keydown', (e) => {
             if (e.key === 'Enter') { triggerRedirectAd(); goToPageFromInput(); }
         });
+        searchButton.addEventListener('click', handleSearchAndFilter);
+        searchInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { handleSearchAndFilter(); }
+        });
 
+        // --- INISIALISASI ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const initialParams = getInitialParamsFromUrl();
+            currentPage = initialParams.page;
+            currentSearch = initialParams.query;
+            currentOrder = initialParams.order;
+            
+            // Set nilai input sesuai URL (jika ada)
+            searchInput.value = currentSearch;
+            sortSelect.value = currentOrder;
 
-        // --- LOAD DATA AWAL DARI videos.json - TIDAK BERUBAH ---
-        fetch('videos.json')
-            .then(res => res.json())
-            .then(data => {
-                allVideos = data.videos.map((v, index) => ({ ...v, id: index }));
-
-                if (allVideos && allVideos.length > 0) {
-                    const initialPage = getPageFromUrl();
-                    displayVideos(initialPage, false);
-                } else {
-                    gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
-                }
-            })
-            .catch(error => {
-                console.error('Gagal memuat videos.json:', error);
-                gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file videos.json ada.</p>';
-            });
-
+            fetchVideos(currentPage, currentSearch, currentOrder);
+        });
+        
+        // Fungsionalitas Menu Mobile
         const menuButton = document.getElementById('menuButton');
         const mobileMenu = document.getElementById('mobileMenu');
         const menuIcon = document.getElementById('menuIcon');
 
         menuButton.addEventListener('click', () => {
-            // Toggle (sembunyikan/tampilkan) menu
             mobileMenu.classList.toggle('hidden');
-
-            // Ganti ikon hamburger <-> close
             if (mobileMenu.classList.contains('hidden')) {
-                menuIcon.classList.remove('fa-times'); // Ikon Close
-                menuIcon.classList.add('fa-bars'); // Ikon Hamburger
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
             } else {
                 menuIcon.classList.remove('fa-bars');
                 menuIcon.classList.add('fa-times');

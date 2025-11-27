@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Putar Video | King Bokep</title>
+    <meta name="description" content="Tonton video dewasa viral eksklusif. Nikmati pemutaran kualitas tinggi dari King Bokep." />
+
+    <link rel="canonical" href="https://videyindoviral.vercel.app/play2.html" />
+
+    <meta name="author" content="King Bokep" />
+    <meta name="robots" content="noindex, follow" />
+    <meta name="rating" content="adult" />
+    <meta name="contentRating" content="18+" />
+    <meta name="referrer" content="no-referrer-when-downgrade" />
+
+    <link rel="icon" href="/favicon.ico" type="image/x-icon" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-dark': '#121212',
+                        'card-dark': '#1E1E1E',
+                        'accent': '#6366F1',
+                    },
+                    boxShadow: {
+                        '3xl': '0 35px 60px -15px rgba(0, 0, 0, 0.3)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <style>
+        /* Player 16:9 Aspect Ratio */
+        .player-aspect-ratio {
+            padding-bottom: 56.25%;
+            height: 0;
+            position: relative;
+        }
+
+        .player-aspect-ratio iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Video Grid untuk video terkait (SAMA DENGAN INDEX) */
+        .related-video-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 1.5rem;
+        }
+        @media (min-width: 768px) {
+            .related-video-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+            }
+        }
+        @media (min-width: 1024px) {
+            .related-video-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+            }
+        }
+        
+        .animate-fadeIn {
+            animation: fadeIn 0.5s ease-out forwards;
+            opacity: 0;
+        }
+        @keyframes fadeIn { to { opacity: 1; } }
+    </style>
+</head>
+
+<body class="bg-primary-dark text-gray-100 min-h-screen">
+
+    <header class="bg-card-dark shadow-3xl fixed w-full z-20 backdrop-blur-sm bg-opacity-90">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex justify-between items-center">
+            <a href="/" class="flex items-center space-x-3 transition transform hover:scale-105">
+                <img src="https://videyindoviral.vercel.app/logo1.png" alt="Logo King Bokep - Mahkota K" class="h-10 w-10 object-contain">
+                <h1 class="text-xl font-extrabold text-accent tracking-wider">KING BOKEP</h1>
+            </a>
+            
+            <nav class="hidden md:block">
+                <a href="/" class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">GALERI</a>
+                <a href="/tentang" class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">TENTANG</a>
+                <a href="/eporner" class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">EPORNER</a>
+                <a href="/login" class="ml-4 px-4 py-2 bg-accent/80 text-white rounded-full text-sm font-semibold hover:bg-accent transition transform hover:scale-105 shadow-lg shadow-accent/30">
+                    <i class="fas fa-crown mr-1"></i> VIP
+                </a>
+            </nav>
+            
+            <button id="menuButton" class="md:hidden text-gray-300 hover:text-accent focus:outline-none p-2">
+                <i class="fas fa-bars text-xl" id="menuIcon"></i>
+            </button>
+        </div>
+        
+        <div id="mobileMenu" class="hidden md:hidden pb-4 pt-2 border-t border-gray-700">
+            <nav class="px-2 pt-2 pb-3 space-y-1">
+                <a href="index.html" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                    <i class="fas fa-home mr-2"></i> GALERI
+                </a>
+                <a href="/tentang" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition">
+                    <i class="fas fa-info-circle mr-2"></i> TENTANG
+                </a>
+                <a href="/eporner" class="block px-3 py-2 rounded-md text-base font-medium text-white bg-gray-700 hover:bg-gray-600 transition">
+                    <i class="fas fa-video mr-2"></i> EPORNER
+                </a>
+                <a href="/login" class="block w-full text-center mt-3 px-3 py-2 bg-accent text-white rounded-md text-base font-semibold hover:bg-accent/90 transition shadow-lg shadow-accent/30">
+                    <i class="fas fa-crown mr-2"></i> LOGIN VIP
+                </a>
+                <a href="/register" class="block w-full text-center mt-2 px-3 py-2 bg-green-600 text-white rounded-md text-base font-semibold hover:bg-green-700 transition shadow-lg shadow-green-600/30">
+                    <i class="fas fa-user-plus mr-2"></i> DAFTAR
+                </a>
+            </nav>
+        </div>
+    </header>
+    <main class="p-4 md:p-8 pt-24">
+        <div class="max-w-7xl mx-auto">
+            
+            <div id="videoContainer" class="bg-card-dark rounded-xl shadow-2xl p-4 md:p-6 mb-8">
+                <h2 id="videoTitle" class="text-2xl md:text-3xl font-bold text-white mb-4">Memuat Video...</h2>
+
+                <div class="player-aspect-ratio">
+                    <div id="playerEmbed" class="w-full h-full bg-black flex items-center justify-center text-gray-500 rounded-lg">
+                        <i class="fas fa-video fa-2x"></i>
+                    </div>
+                </div>
+
+                <div id="videoInfo" class="mt-4 text-sm text-gray-400">
+                </div>
+            </div>
+
+            <section class="mt-10 p-4 bg-card-dark rounded-xl border border-gray-800">
+                <h3 class="text-xl font-bold text-accent mb-4"><i class="fas fa-fire mr-2"></i> Video Terkait Lainnya</h3>
+                <div class="related-video-grid" id="relatedVideosGallery">
+                    <div class="text-center col-span-full py-10 text-gray-400 text-lg" id="relatedLoading">
+                        <i class="fas fa-spinner fa-spin mr-2"></i> Memuat video terkait...
+                    </div>
+                </div>
+            </section>
+
+        </div>
+    </main>
+
+    <footer class="mt-20 border-t border-gray-800 py-6 bg-card-dark/50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 text-sm">
+            <p>&copy; 2025 King Bokep. Semua Hak Cipta Dilindungi. <span class="text-red-500">18+</span> Content.</p>
+            <div class="mt-2 space-x-4">
+                <a href="#" class="hover:text-accent transition">Ketentuan Layanan</a>
+                <span class="text-gray-600">|</span>
+                <a href="#" class="hover:text-accent transition">Kebijakan Privasi</a>
+            </div>
+        </div>
+    </footer>
+    <script>
+        // --- KONFIGURASI API EPORNER ---
+        const EPORNER_API_URL = 'https://www.eporner.com/api/v2/video/search/';
+        const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
+        
+        const RELATED_VIDEOS_COUNT = 8; // Jumlah video terkait yang ingin ditampilkan
+        const RELATED_VIDEOS_ORDER = 'views'; // Urutan untuk video terkait
+
+        // Fungsionalitas Iklan
+        function triggerRedirectAd() {
+            // Logika popup/redirect sederhana, mungkin perlu penyesuaian tergantung pada browser
+            const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
+            if (newWindow) { newWindow.blur(); window.focus(); }
+        }
+
+        // Fungsi bantu untuk mengubah format durasi dari detik ke "MM:SS"
+        function formatDuration(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const remainingSeconds = seconds % 60;
+            const paddedSeconds = remainingSeconds < 10 ? '0' + remainingSeconds : remainingSeconds;
+            return `${minutes}:${paddedSeconds}`;
+        }
+
+        // Fungsionalitas Pembuatan Kartu Video 
+        function createVideoCard(videoData, index) {
+            const card = document.createElement('a');
+
+            // URL ke halaman detail play.html. Diubah agar mengarah ke play2.html seperti di kode Anda
+            card.href = `play2.html?id=${videoData.id}`; 
+            
+            card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
+            card.style.animationDelay = `${index * 0.08}s`; 
+
+            const thumbnailUrl = videoData.default_thumb?.src || 'https://via.placeholder.com/320x180.png?text=No+Preview'; 
+            const durationFormatted = formatDuration(videoData.length_sec || 0); 
+            const title = videoData.title || 'Video Tanpa Judul';
+
+            card.innerHTML = `
+                <div class="relative player-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
+                    <img src="${thumbnailUrl}" alt="Thumbnail ${title}" 
+                        class="absolute top-0 left-0 w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                        onerror="this.onerror=null;this.src='https://via.placeholder.com/320x180.png?text=No+Preview'" 
+                        loading="lazy" />
+
+                    <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
+                        bg-black/40 opacity-0 group-hover:opacity-100 
+                        transition-opacity duration-300">
+                        <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
+                    </div>
+                    
+                    <div class="absolute bottom-2 right-2 bg-black/70 text-white text-xs px-2 py-1 rounded-full z-10 font-semibold">
+                        <i class="far fa-clock mr-1"></i> ${durationFormatted}
+                    </div>
+                </div>
+                <div class="p-4 text-left">
+                    <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${title}</h3>
+                    <div class="text-xs text-gray-500 mt-1 flex items-center">
+                        <i class="fas fa-eye mr-1 text-accent"></i> <span class="font-medium">${(videoData.views || 0).toLocaleString()}x ditonton</span>
+                        <span class="ml-3 text-yellow-500">
+                            <i class="fas fa-star"></i> ${(parseFloat(videoData.rate) * 10).toFixed(1) || '0.0'}
+                        </span>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // Fungsionalitas Ambil Video Terkait (Dibuat baru/diperbaiki dari kode asli)
+        async function fetchRelatedVideos(query, excludeId) {
+            const gallery = document.getElementById('relatedVideosGallery');
+            const loading = document.getElementById('relatedLoading');
+            
+            gallery.innerHTML = '';
+            gallery.appendChild(loading);
+            loading.classList.remove('hidden');
+
+            const params = new URLSearchParams({
+                action: 'search',
+                query: query.id,
+                order: RELATED_VIDEOS_ORDER,
+                per_page: RELATED_VIDEOS_COUNT + 1, // Meminta 1 lebih banyak jika video utama ada dalam hasil
+                page: 1,
+            });
+            
+            const apiUrl = `${EPORNER_API_URL}?${params.toString()}`;
+
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const data = await response.json();
+                
+                loading.classList.add('hidden');
+                gallery.innerHTML = ''; // Hapus indikator loading
+
+                if (data.videos && data.videos.length > 0) {
+                    let videosToDisplay = data.videos.filter(v => v.id !== excludeId).slice(0, RELATED_VIDEOS_COUNT);
+                    
+                    if (videosToDisplay.length === 0) {
+                        gallery.innerHTML = '<p class="text-center col-span-full mt-2 text-md text-gray-400">Tidak ada video terkait ditemukan.</p>';
+                    } else {
+                        videosToDisplay.forEach((video, index) => {
+                            const card = createVideoCard(video, index);
+                            gallery.appendChild(card);
+                        });
+                    }
+
+                } else {
+                    gallery.innerHTML = '<p class="text-center col-span-full mt-2 text-md text-gray-400">Tidak ada video terkait ditemukan.</p>';
+                }
+            } catch (error) {
+                console.error('Gagal memuat video terkait dari Eporner API:', error);
+                loading.classList.add('hidden');
+                gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-2">Gagal memuat data video terkait. Coba lagi nanti.</p>';
+            }
+        }
+
+
+        // --- Logika Pemutar Video Utama ---
+        async function loadVideoPlayer() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const videoId = urlParams.get('id');
+            const playerEmbed = document.getElementById('playerEmbed');
+            const videoTitleElement = document.getElementById('videoTitle');
+            const videoInfoElement = document.getElementById('videoInfo');
+            const relatedLoading = document.getElementById('relatedLoading'); // Ambil elemen loading terkait
+
+            if (!videoId) {
+                // Tampilkan pesan error jika ID tidak ada
+                videoTitleElement.textContent = "Error: ID Video Tidak Ditemukan";
+                playerEmbed.innerHTML = `<p class="text-red-500 p-8">Gagal memuat. Pastikan Anda memiliki ID video yang valid di URL (contoh: play2.html?id=xyz).</p>`;
+                relatedLoading.classList.add('hidden'); // Sembunyikan loading terkait
+                return; 
+            }
+            
+            // Tampilkan Iklan
+            triggerRedirectAd();
+
+            // 1. Dapatkan Detail Video Utama (dengan API Search)
+            let primaryVideoTitle = `Video ID: ${videoId}`;
+            let searchKeywords = '';
+
+            try {
+                const detailParams = new URLSearchParams({
+                    action: 'search',
+                    query: videoId, // Cari berdasarkan ID 
+                    per_page: 1,
+                    page: 1,
+                });
+
+                const detailApiUrl = `${EPORNER_API_URL}?${detailParams.toString()}`;
+                const detailResponse = await fetch(detailApiUrl);
+                const detailData = await detailResponse.json();
+
+                if (detailData.videos && detailData.videos.length > 0 && detailData.videos[0].id === videoId) {
+                    const primaryVideo = detailData.videos[0];
+                    primaryVideoTitle = primaryVideo.title || primaryVideoTitle;
+                    
+                    // Ambil 3-5 kata kunci dari judul untuk pencarian terkait
+                    // Filter kata pendek (kurang dari 3 huruf)
+                    const words = primaryVideoTitle.split(/\s+/).filter(w => w.length > 3);
+                    searchKeywords = words.slice(0, 5).join(' ');
+                    
+                }
+            } catch (error) {
+                console.error("Gagal mengambil detail video utama:", error);
+            }
+            
+            // Fallback jika keywords tidak ditemukan
+            if (searchKeywords.length < 5) {
+                searchKeywords = 'popular'; 
+            }
+            
+            // 2. Tampilkan Player
+            const embedUrl = `https://www.eporner.com/embed/${videoId}/`;
+
+            const iframe = document.createElement('iframe');
+            iframe.src = embedUrl;
+            iframe.setAttribute('frameborder', '0');
+            iframe.setAttribute('allowfullscreen', 'true');
+            iframe.setAttribute('scrolling', 'no');
+            iframe.setAttribute('referrerpolicy', 'no-referrer'); 
+            
+            playerEmbed.innerHTML = ''; 
+            playerEmbed.appendChild(iframe);
+
+            // 3. Update Judul & Info
+            videoTitleElement.textContent = primaryVideoTitle;
+            videoInfoElement.innerHTML = `Sumber: <a href="https://www.eporner.com/video-${videoId}" target="_blank" class="text-accent hover:underline">Eporner</a> | Konten Dewasa 18+`;
+            
+            // 4. Panggil Video Terkait menggunakan Keywords dari Video Utama
+            fetchRelatedVideos(searchKeywords, videoId);
+        }
+
+        // Panggil fungsi saat DOM siap
+        document.addEventListener('DOMContentLoaded', loadVideoPlayer);
+        
+        // Fungsionalitas Menu Mobile
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            } else {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            }
+        });
+    </script>
+    <script type='text/javascript'
+        src='//sardineoctoberconnecting.com/5b/9b/7a/5b9b7a7dab949f5559d8fce454ac6f09.js'></script>
+</body>
+
+</html>
