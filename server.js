@@ -123,8 +123,8 @@ app.get("/thumbnail", async (req, res) => {
   }
 });
 
-app.get('/video', async (req, res) => {
-  const videoId = req.query.id;
+app.get('/video/:id', async (req, res) => {
+  const videoId = req.params.id;
 
   try {
     const data = await fetch('https://videyindoviral.vercel.app/vip.json').then(r => r.json());
