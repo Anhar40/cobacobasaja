@@ -4,6 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title id="pageTitle"></title>
+
+    <meta property="og:site_name" content="KING BOKEP">
+    <meta property="og:type" content="video.other">
+
+
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -261,12 +267,24 @@ fetch('vip.json')
 
         if (currentVideo) {
             videoTitleElement.textContent = currentVideo.title;
-            pageTitleElement.textContent = `King Bokep | ${currentVideo.title}`;
+            pageTitleElement.textContent = `${currentVideo.title}`;
             videoPlayer.src = currentVideo.url;
 
             const description = `Tonton video: ${currentVideo.title} (${currentVideo.durasi || '?'} menit). Hanya di King Bokep!`;
             const currentUrl = window.location.href;
-            const imageUrl = `https://videyindoviral.vercel.app/video?id=${videoId}`;
+            const imageUrl = `https://videyindoviral.vercel.app/thumbnail?id=${videoId}`;
+
+            if (ogTitle) ogTitle.setAttribute('content', currentVideo.title);
+            if (ogUrl) ogUrl.setAttribute('content', currentUrl);
+            if (ogDescription) ogDescription.setAttribute('content', description);
+            if (ogImage) ogImage.setAttribute('content', imageUrl);
+            const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+            if (twitterTitle) twitterTitle.setAttribute('content', currentVideo.title);
+            const twitterDesc = document.querySelector('meta[name="twitter:description"]');
+            if (twitterDesc) twitterDesc.setAttribute('content', description);
+            const twitterImg = document.querySelector('meta[name="twitter:image"]');
+            if (twitterImg) twitterImg.setAttribute('content', imageUrl);
+
             // Rekomendasi
             recommendationGallery.innerHTML = '';
             const recommendations = getRandomVideos(currentVideo.id, 4);
