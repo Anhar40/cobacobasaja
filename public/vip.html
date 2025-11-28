@@ -9,17 +9,14 @@
     <meta name="description"
         content="Koleksi vidio viral dewasa terbaru. Jelajahi galeri, putar, dan nikmati koleksi terpopuler dari King Bokep." />
 
-    <!-- Canonical -->
     <link rel="canonical" href="https://videyindoviral.vercel.app/" />
 
-    <!-- Basic SEO -->
     <meta name="author" content="King Bokep VIP" />
     <meta name="robots" content="index, follow, max-snippet:200, max-image-preview:large" />
     <meta name="rating" content="adult" />
     <meta name="contentRating" content="18+" />
     <meta name="referrer" content="no-referrer-when-downgrade" />
 
-    <!-- Open Graph -->
     <meta property="og:locale" content="id_ID" />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="King Bokep VIP" />
@@ -31,24 +28,19 @@
     <meta property="og:image:alt" content="King Bokep VIP" />
     <meta property="og:restrictions:age" content="18+" />
 
-    <!-- Twitter -->
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content="King Bokep — VIP" />
     <meta name="twitter:description"
         content="Koleksi vidio viral dewasa terbaru. Jelajahi galeri, putar, dan nikmati koleksi terpopuler." />
     <meta name="twitter:image" content="https://videyindoviral.vercel.app/gambar.jpg" />
 
-    <!-- Preload utama -->
     <link rel="preload" href="https://videyindoviral.vercel.app/gambar.jpg" as="image" />
     <link rel="preconnect" href="https://videyindoviral.vercel.app" crossorigin />
 
-    <!-- Favicon -->
     <link rel="icon" href="/favicon.ico" type="image/x-icon" />
 
-    <!-- Tailwind -->
     <script src="https://cdn.tailwindcss.com"></script>
 
-    <!-- Tailwind Config -->
     <script>
         tailwind.config = {
             theme: {
@@ -66,10 +58,8 @@
         }
     </script>
 
-    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 
-    <!-- JSON-LD WebSite -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -92,7 +82,6 @@
         }
     </script>
 
-    <!-- JSON-LD Collection Page -->
     <script type="application/ld+json">
         {
           "@context": "https://schema.org",
@@ -105,7 +94,6 @@
         }
     </script>
 
-    <!-- Styles -->
     <style>
         .animate-fadeIn {
             animation: fadeIn 0.5s ease-out forwards;
@@ -143,11 +131,6 @@
                 grid-template-columns: repeat(4, minmax(0, 1fr));
             }
         }
-
-        .video-in-card {
-            pointer-events: none;
-            border-radius: 12px 12px 0 0;
-        }
     </style>
 </head>
 
@@ -162,16 +145,33 @@
                 <h1 class="text-xl font-extrabold text-accent tracking-wider">KING BOKEP</h1>
             </a>
 
-            <nav class="hidden md:block">
-                <a href="/" class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">GALERI</a>
-                <a href="/tentang"
-                    class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">TENTANG</a>
-                <a href="/eporner"
-                    class="text-gray-300 hover:text-accent mx-4 transition font-medium text-sm">EPORNER</a>
-                <a href="/login"
-                    class="ml-4 px-4 py-2 bg-accent/80 text-white rounded-full text-sm font-semibold hover:bg-accent transition transform hover:scale-105 shadow-lg shadow-accent/30">
-                    <i class="fas fa-crown mr-1"></i> VIP
-                </a>
+            <nav class="hidden md:flex items-center space-x-6">
+                <a href="/" class="text-gray-300 hover:text-accent transition font-medium text-sm">GALERI</a>
+                <a href="/tentang" class="text-gray-300 hover:text-accent transition font-medium text-sm">TENTANG</a>
+                <a href="/eporner" class="text-gray-300 hover:text-accent transition font-medium text-sm">EPORNER</a>
+
+                <div id="navGuest" class="flex items-center space-x-4">
+                    <a href="/login"
+                        class="ml-4 px-4 py-2 bg-accent/80 text-white rounded-full text-sm font-semibold hover:bg-accent transition transform hover:scale-105 shadow-lg shadow-accent/30">
+                        <i class="fas fa-crown mr-1"></i> VIP
+                    </a>
+                </div>
+
+                <div id="navUser" class="hidden items-center gap-4 p-2 bg-gray-800 rounded-lg border border-gray-700">
+                    <div class="flex items-center gap-3">
+                        <img id="userPhotoDesktop" src="" class="h-10 w-10 rounded-full border border-gray-600"
+                            alt="Foto User">
+                        <div>
+                            <p id="userNameDesktop" class="text-sm font-bold truncate"></p>
+                            <p id="userEmailDesktop" class="text-xs text-gray-400 truncate"></p>
+                        </div>
+                    </div>
+
+                    <button onclick="logoutNow()" title="Logout"
+                        class="bg-red-600 px-3 py-1.5 rounded-full text-white text-sm font-semibold hover:bg-red-700 transition">
+                        <i class="fas fa-sign-out-alt"></i>
+                    </button>
+                </div>
             </nav>
 
             <button id="menuButton" class="md:hidden text-gray-300 hover:text-accent focus:outline-none p-2">
@@ -193,14 +193,32 @@
                     class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white transition">
                     <i class="fas fa-video mr-2"></i> EPORNER
                 </a>
-                <a href="/login"
-                    class="block w-full text-center mt-3 px-3 py-2 bg-accent text-white rounded-md text-base font-semibold hover:bg-accent/90 transition shadow-lg shadow-accent/30">
-                    <i class="fas fa-crown mr-2"></i> LOGIN VIP
-                </a>
-                <a href="/register"
-                    class="block w-full text-center mt-2 px-3 py-2 bg-green-600 text-white rounded-md text-base font-semibold hover:bg-green-700 transition shadow-lg shadow-green-600/30">
-                    <i class="fas fa-user-plus mr-2"></i> DAFTAR
-                </a>
+
+                <div id="mobileGuest" class="space-y-1 mt-3 pt-3 border-t border-gray-700">
+                    <a href="/login"
+                        class="block w-full text-center px-3 py-2 bg-accent text-white rounded-md text-base font-semibold hover:bg-accent/90 transition shadow-lg shadow-accent/30">
+                        <i class="fas fa-crown mr-2"></i> LOGIN VIP
+                    </a>
+                    <a href="/register"
+                        class="block w-full text-center px-3 py-2 bg-green-600 text-white rounded-md text-base font-semibold hover:bg-green-700 transition shadow-lg shadow-green-600/30">
+                        <i class="fas fa-user-plus mr-2"></i> DAFTAR
+                    </a>
+                </div>
+
+                <div id="mobileUser" class="hidden mt-3 pt-3 border-t border-gray-700 space-y-3">
+                    <div class="flex items-center gap-4 p-3 bg-gray-800 rounded-lg">
+                        <img id="userPhotoMobile" src="" class="h-12 w-12 rounded-full border border-gray-600"
+                            alt="Foto User">
+                        <div>
+                            <p id="userNameMobile" class="text-base font-bold text-white"></p>
+                            <p id="userEmailMobile" class="text-sm text-gray-400"></p>
+                        </div>
+                    </div>
+                    <button onclick="logoutNow()"
+                        class="block w-full text-center px-3 py-2 bg-red-600 text-white rounded-md text-base font-semibold hover:bg-red-700 transition shadow-lg shadow-red-600/30">
+                        <i class="fas fa-sign-out-alt mr-2"></i> LOGOUT
+                    </button>
+                </div>
             </nav>
         </div>
     </header>
@@ -248,6 +266,12 @@
             </div>
         </div>
     </footer>
+    <div id="toastNotification"
+        class="fixed bottom-5 right-5 z-50 p-4 rounded-xl shadow-2xl transition-opacity duration-300 opacity-0 transform translate-y-full bg-green-600/95 text-white flex items-center space-x-3 max-w-xs md:max-w-sm"
+        role="alert">
+        <i class="fas fa-check-circle text-xl"></i>
+        <p id="toastMessage" class="font-semibold"></p>
+    </div>
     <script>
             (function (kcwd) {
                 var d = document,
@@ -260,275 +284,408 @@
                 l.parentNode.insertBefore(s, l);
             })({})
     </script>
-   <script>
-const gallery = document.getElementById('videoGallery');
-const paginationContainer = document.getElementById('paginationContainer');
-const infoPaginasi = document.getElementById('infoPaginasi');
-const pageInput = document.getElementById('pageInput');
-const goToPageButton = document.getElementById('goToPageButton');
+    <script>
+        const gallery = document.getElementById('videoGallery');
+        const paginationContainer = document.getElementById('paginationContainer');
+        const infoPaginasi = document.getElementById('infoPaginasi');
+        const pageInput = document.getElementById('pageInput');
+        const goToPageButton = document.getElementById('goToPageButton');
 
-const VIDEOS_PER_PAGE = 8;
-const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
-let allVideos = [];
-let currentPage = 1;
+        const VIDEOS_PER_PAGE = 8;
+        const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
+        let allVideos = [];
+        let currentPage = 1;
 
-// Fungsi iklan
-function triggerRedirectAd() {
-    const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
-    if (newWindow) { newWindow.blur(); window.focus(); }
-}
-
-// Fungsi durasi video
-function getDurationFromVideo(videoUrl) {
-    return new Promise((resolve, reject) => {
-        const videoElement = document.createElement('video');
-        videoElement.preload = 'metadata';
-        videoElement.crossOrigin = 'anonymous';
-        videoElement.onloadedmetadata = function () {
-            const minutes = Math.ceil(videoElement.duration / 60);
-            resolve(minutes);
-        };
-        videoElement.onerror = function () { reject('?'); };
-        videoElement.src = videoUrl;
-    });
-}
-
-// === Fungsi Dekripsi Thumbnail AES-GCM ===
-async function decryptThumbnail(encrypted) {
-    try {
-        const ciphertext = Uint8Array.from(atob(encrypted.ciphertext), c => c.charCodeAt(0));
-        const nonce = Uint8Array.from(atob(encrypted.nonce), c => c.charCodeAt(0));
-        const tag = Uint8Array.from(atob(encrypted.tag), c => c.charCodeAt(0));
-        const keyBytes = Uint8Array.from(atob(encrypted.key), c => c.charCodeAt(0));
-
-        const cipherPlusTag = new Uint8Array(ciphertext.length + tag.length);
-        cipherPlusTag.set(ciphertext);
-        cipherPlusTag.set(tag, ciphertext.length);
-
-        const cryptoKey = await crypto.subtle.importKey(
-            "raw",
-            keyBytes,
-            { name: "AES-GCM" },
-            false,
-            ["decrypt"]
-        );
-
-        const decrypted = await crypto.subtle.decrypt(
-            { name: "AES-GCM", iv: nonce },
-            cryptoKey,
-            cipherPlusTag
-        );
-
-        const blob = new Blob([decrypted], { type: 'image/jpeg' });
-        return URL.createObjectURL(blob);
-
-    } catch (err) {
-        console.error("Gagal dekripsi thumbnail:", err);
-        return null;
-    }
-}
-
-// Buat kartu video
-async function createVideoCard(videoData, index) {
-    const card = document.createElement('a');
-    card.href = `video?id=${videoData.id}`;
-    card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
-    card.style.animationDelay = `${index * 0.08}s`;
-
-    let thumbnailUrl = null;
-    if (videoData.thumbnail_encrypted) {
-        thumbnailUrl = await decryptThumbnail(videoData.thumbnail_encrypted);
-        console.log(`Thumbnail terdekripsi untuk video ID ${videoData.id}:`, thumbnailUrl);
-    }
-    if (!thumbnailUrl) thumbnailUrl = videoData.url + '#t=1';
-
-    card.innerHTML = `
-        <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
-            <video 
-                src="${videoData.url}" 
-                preload="metadata" 
-                class="absolute top-0 left-0 w-full h-full object-cover"
-                muted
-                playsinline
-                poster="${thumbnailUrl}">
-            </video>
-            <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
-                bg-black/40 opacity-0 group-hover:opacity-100 
-                transition-opacity duration-300">
-                <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
-            </div>
-        </div>
-        <div class="p-4 text-left">
-            <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${videoData.title}</h3>
-            <div class="text-xs text-gray-500 mt-1 flex items-center">
-                <i class="far fa-clock mr-1 text-accent"></i> 
-                <span class="font-medium">${videoData.durasi || '?'} menit</span>
-            </div>
-        </div>
-    `;
-    return card;
-}
-
-// === Display Video (Async) ===
-async function displayVideos(page, updateUrl = true) {
-    const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
-    if (page < 1) page = 1;
-    if (page > totalPages) page = totalPages;
-
-    currentPage = page;
-    gallery.innerHTML = '';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-
-    const startIndex = (page - 1) * VIDEOS_PER_PAGE;
-    const endIndex = startIndex + VIDEOS_PER_PAGE;
-    const videosOnPage = allVideos.slice(startIndex, endIndex);
-
-    for (let i = 0; i < videosOnPage.length; i++) {
-        const card = await createVideoCard(videosOnPage[i], i);
-        gallery.appendChild(card);
-    }
-
-    renderPagination(totalPages);
-
-    infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, allVideos.length)} dari ${allVideos.length} video. (Halaman ${currentPage} dari ${totalPages})`;
-    pageInput.value = currentPage;
-    pageInput.max = totalPages;
-
-    if (updateUrl) {
-        const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
-        window.history.pushState({ path: newUrl }, '', newUrl);
-    }
-}
-
-// === Pagination ===
-function renderPagination(totalPages) {
-    paginationContainer.innerHTML = '';
-    if (totalPages <= 1) return;
-
-    const prevButton = createPaginationButton('<i class="fas fa-angle-left"></i>', currentPage - 1, currentPage === 1);
-    paginationContainer.appendChild(prevButton);
-
-    let startPage = Math.max(1, currentPage - 1);
-    let endPage = Math.min(totalPages, currentPage + 1);
-    if (currentPage === 1 && totalPages >= 3) { endPage = 3; }
-    else if (currentPage === totalPages && totalPages >= 3) { startPage = totalPages - 2; }
-    else if (totalPages < 3) { startPage = 1; endPage = totalPages; }
-
-    for (let i = startPage; i <= endPage; i++) {
-        const pageButton = createPaginationButton(i, i, i === currentPage);
-        paginationContainer.appendChild(pageButton);
-    }
-
-    const nextButton = createPaginationButton('<i class="fas fa-angle-right"></i>', currentPage + 1, currentPage === totalPages);
-    paginationContainer.appendChild(nextButton);
-}
-
-function createPaginationButton(text, pageNumber, isActive = false) {
-    const button = document.createElement('button');
-    button.innerHTML = text;
-
-    const baseClasses = 'w-10 h-10 rounded-full font-semibold transition duration-200 flex items-center justify-center text-sm shadow-md';
-
-    if (isActive) {
-        button.className = `${baseClasses} bg-accent text-white ring-2 ring-indigo-300/50`;
-    } else if (pageNumber < 1 || pageNumber > Math.ceil(allVideos.length / VIDEOS_PER_PAGE)) {
-        button.className = `${baseClasses} bg-gray-800 text-gray-600 cursor-not-allowed`;
-        button.disabled = true;
-    } else {
-        button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:text-white`;
-        button.onclick = () => displayVideos(pageNumber);
-    }
-    return button;
-}
-
-// Ambil page dan id dari URL
-function getPageFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const pageParam = urlParams.get('page');
-    const pageNumber = parseInt(pageParam);
-    return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
-}
-
-function getIdFromUrl() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const idParam = urlParams.get('id');
-    const videoId = parseInt(idParam);
-    return (!isNaN(videoId) && videoId >= 0) ? videoId : null;
-}
-
-// Go To Page
-function goToPageFromInput() {
-    triggerRedirectAd();
-    let page = parseInt(pageInput.value);
-    const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
-    if (isNaN(page) || page < 1) page = 1;
-    else if (page > totalPages) page = totalPages;
-    displayVideos(page);
-}
-
-goToPageButton.addEventListener('click', goToPageFromInput);
-pageInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') { triggerRedirectAd(); goToPageFromInput(); }
-});
-
-// Load JSON dan tampilkan video
-fetch('vip.json')
-    .then(res => res.json())
-    .then(async data => {
-        console.log('✅ Data JSON berhasil diambil:', data);
-
-        allVideos = data.videos.map(v => ({
-            ...v,
-            id: v.id // pakai id asli dari JSON
-        }));
-        console.log('🎬 Semua video setelah mapping:', allVideos);
-
-        if (allVideos.length > 0) {
-            const videoId = getIdFromUrl();
-            console.log('🔎 Video ID dari URL:', videoId);
-
-            if (videoId !== null) {
-                const video = allVideos.find(v => v.id === videoId);
-                console.log('🎯 Video yang dipilih:', video);
-
-                if (video) {
-                    gallery.innerHTML = '';
-                    const card = await createVideoCard(video, 0);
-                    gallery.appendChild(card);
-                    infoPaginasi.textContent = `Menampilkan video ID ${video.id} dari ${allVideos.length}`;
-                    paginationContainer.innerHTML = ''; // sembunyikan pagination
-                    return;
-                }
-            }
-            // fallback ke pagination
-            const initialPage = getPageFromUrl();
-            await displayVideos(initialPage, false);
-
-        } else {
-            gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
+        // Fungsi iklan
+        function triggerRedirectAd() {
+            const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
+            if (newWindow) { newWindow.blur(); window.focus(); }
         }
-    })
-    .catch(error => {
-        console.error('❌ Gagal memuat vip.json:', error);
-        gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file vip.json ada.</p>';
-    });
 
-// Mobile menu
-const menuButton = document.getElementById('menuButton');
-const mobileMenu = document.getElementById('mobileMenu');
-const menuIcon = document.getElementById('menuIcon');
+        // Fungsi durasi video
+        function getDurationFromVideo(videoUrl) {
+            return new Promise((resolve, reject) => {
+                const videoElement = document.createElement('video');
+                videoElement.preload = 'metadata';
+                videoElement.crossOrigin = 'anonymous';
+                videoElement.onloadedmetadata = function () {
+                    const minutes = Math.ceil(videoElement.duration / 60);
+                    resolve(minutes);
+                };
+                videoElement.onerror = function () { reject('?'); };
+                videoElement.src = videoUrl;
+            });
+        }
 
-menuButton.addEventListener('click', () => {
-    mobileMenu.classList.toggle('hidden');
-    if (mobileMenu.classList.contains('hidden')) {
-        menuIcon.classList.remove('fa-times');
-        menuIcon.classList.add('fa-bars');
-    } else {
-        menuIcon.classList.remove('fa-bars');
-        menuIcon.classList.add('fa-times');
-    }
-});
-</script>
+        // === Fungsi Dekripsi Thumbnail AES-GCM ===
+        async function decryptThumbnail(encrypted) {
+            try {
+                const ciphertext = Uint8Array.from(atob(encrypted.ciphertext), c => c.charCodeAt(0));
+                const nonce = Uint8Array.from(atob(encrypted.nonce), c => c.charCodeAt(0));
+                const tag = Uint8Array.from(atob(encrypted.tag), c => c.charCodeAt(0));
+                const keyBytes = Uint8Array.from(atob(encrypted.key), c => c.charCodeAt(0));
+
+                const cipherPlusTag = new Uint8Array(ciphertext.length + tag.length);
+                cipherPlusTag.set(ciphertext);
+                cipherPlusTag.set(tag, ciphertext.length);
+
+                const cryptoKey = await crypto.subtle.importKey(
+                    "raw",
+                    keyBytes,
+                    { name: "AES-GCM" },
+                    false,
+                    ["decrypt"]
+                );
+
+                const decrypted = await crypto.subtle.decrypt(
+                    { name: "AES-GCM", iv: nonce },
+                    cryptoKey,
+                    cipherPlusTag
+                );
+
+                const blob = new Blob([decrypted], { type: 'image/jpeg' });
+                return URL.createObjectURL(blob);
+
+            } catch (err) {
+                console.error("Gagal dekripsi thumbnail:", err);
+                return null;
+            }
+        }
+
+        // Buat kartu video
+        async function createVideoCard(videoData, index) {
+            const card = document.createElement('a');
+            card.href = `video?id=${videoData.id}`;
+            card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
+            card.style.animationDelay = `${index * 0.08}s`;
+
+            let thumbnailUrl = null;
+            if (videoData.thumbnail_encrypted) {
+                thumbnailUrl = await decryptThumbnail(videoData.thumbnail_encrypted);
+                // console.log(`Thumbnail terdekripsi untuk video ID ${videoData.id}:`, thumbnailUrl);
+            }
+            // Fallback ke poster frame
+            if (!thumbnailUrl) thumbnailUrl = videoData.url + '#t=1';
+
+            card.innerHTML = `
+                <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
+                    <video 
+                        src="${videoData.url}" 
+                        preload="metadata" 
+                        class="absolute top-0 left-0 w-full h-full object-cover"
+                        muted
+                        playsinline
+                        poster="${thumbnailUrl}">
+                    </video>
+                    <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
+                        bg-black/40 opacity-0 group-hover:opacity-100 
+                        transition-opacity duration-300">
+                        <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
+                    </div>
+                </div>
+                <div class="p-4 text-left">
+                    <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${videoData.title}</h3>
+                    <div class="text-xs text-gray-500 mt-1 flex items-center">
+                        <i class="far fa-clock mr-1 text-accent"></i> 
+                        <span class="font-medium">${videoData.durasi || '?'} menit</span>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        // === Display Video (Async) ===
+        async function displayVideos(page, updateUrl = true) {
+            const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
+            if (page < 1) page = 1;
+            if (page > totalPages) page = totalPages;
+
+            currentPage = page;
+            gallery.innerHTML = '';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+
+            const startIndex = (page - 1) * VIDEOS_PER_PAGE;
+            const endIndex = startIndex + VIDEOS_PER_PAGE;
+            const videosOnPage = allVideos.slice(startIndex, endIndex);
+
+            // Tampilkan loading sebelum render card
+            if (videosOnPage.length === 0 && allVideos.length > 0) {
+                gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Loading...</p>';
+            }
+
+            for (let i = 0; i < videosOnPage.length; i++) {
+                const card = await createVideoCard(videosOnPage[i], i);
+                gallery.appendChild(card);
+            }
+
+            renderPagination(totalPages);
+
+            infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, allVideos.length)} dari ${allVideos.length} video. (Halaman ${currentPage} dari ${totalPages})`;
+            pageInput.value = currentPage;
+            pageInput.max = totalPages;
+
+            if (updateUrl) {
+                const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
+                window.history.pushState({ path: newUrl }, '', newUrl);
+            }
+        }
+
+        // === Pagination ===
+        function renderPagination(totalPages) {
+            paginationContainer.innerHTML = '';
+            if (totalPages <= 1) {
+                infoPaginasi.textContent = `Total ${allVideos.length} video.`; // Info lebih jelas jika hanya 1 halaman
+                return;
+            }
+
+            const prevButton = createPaginationButton('<i class="fas fa-angle-left"></i>', currentPage - 1, currentPage === 1);
+            paginationContainer.appendChild(prevButton);
+
+            // Tentukan range halaman yang akan ditampilkan (max 3 tombol di tengah)
+            let startPage = Math.max(1, currentPage - 1);
+            let endPage = Math.min(totalPages, currentPage + 1);
+
+            // Adjust range jika di awal/akhir
+            if (currentPage === 1 && totalPages >= 3) { endPage = 3; }
+            else if (currentPage === totalPages && totalPages >= 3) { startPage = totalPages - 2; }
+            else if (totalPages < 3) { startPage = 1; endPage = totalPages; }
+
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageButton = createPaginationButton(i, i, i === currentPage);
+                paginationContainer.appendChild(pageButton);
+            }
+
+            const nextButton = createPaginationButton('<i class="fas fa-angle-right"></i>', currentPage + 1, currentPage === totalPages);
+            paginationContainer.appendChild(nextButton);
+        }
+
+        function createPaginationButton(text, pageNumber, isActive = false) {
+            const button = document.createElement('button');
+            button.innerHTML = text;
+
+            const baseClasses = 'w-10 h-10 rounded-full font-semibold transition duration-200 flex items-center justify-center text-sm shadow-md';
+
+            if (isActive) {
+                button.className = `${baseClasses} bg-accent text-white ring-2 ring-indigo-300/50`;
+            } else if (pageNumber < 1 || pageNumber > Math.ceil(allVideos.length / VIDEOS_PER_PAGE)) {
+                button.className = `${baseClasses} bg-gray-800 text-gray-600 cursor-not-allowed`;
+                button.disabled = true;
+            } else {
+                button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:text-white`;
+                // Tambahkan iklan setiap klik paginasi
+                button.onclick = () => { triggerRedirectAd(); displayVideos(pageNumber); };
+            }
+            return button;
+        }
+
+        // Ambil page dan id dari URL
+        function getPageFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const pageParam = urlParams.get('page');
+            const pageNumber = parseInt(pageParam);
+            return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
+        }
+
+        function getIdFromUrl() {
+            const urlParams = new URLSearchParams(window.location.search);
+            const idParam = urlParams.get('id');
+            const videoId = parseInt(idParam);
+            return (!isNaN(videoId) && videoId >= 0) ? videoId : null;
+        }
+
+        // Go To Page
+        function goToPageFromInput() {
+            triggerRedirectAd();
+            let page = parseInt(pageInput.value);
+            const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
+            if (isNaN(page) || page < 1) page = 1;
+            else if (page > totalPages) page = totalPages;
+            displayVideos(page);
+        }
+
+        goToPageButton.addEventListener('click', goToPageFromInput);
+        pageInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') { triggerRedirectAd(); goToPageFromInput(); }
+        });
+
+        // Load JSON dan tampilkan video
+        fetch('vip.json')
+            .then(res => res.json())
+            .then(async data => {
+                console.log('✅ Data JSON berhasil diambil.');
+
+                allVideos = data.videos.map(v => ({
+                    ...v,
+                    id: v.id // pakai id asli dari JSON
+                }));
+                // console.log('🎬 Semua video setelah mapping:', allVideos);
+
+                if (allVideos.length > 0) {
+                    const videoId = getIdFromUrl();
+                    // console.log('🔎 Video ID dari URL:', videoId);
+
+                    if (videoId !== null) {
+                        const video = allVideos.find(v => v.id === videoId);
+                        // console.log('🎯 Video yang dipilih:', video);
+
+                        if (video) {
+                            // Tampilkan 1 video jika ada id di URL
+                            gallery.innerHTML = '';
+                            const card = await createVideoCard(video, 0);
+                            gallery.appendChild(card);
+                            infoPaginasi.textContent = `Menampilkan video ID ${video.id} dari ${allVideos.length}`;
+                            paginationContainer.innerHTML = ''; // sembunyikan pagination
+                            goToPageButton.style.display = 'none'; // sembunyikan go to page
+                            pageInput.style.display = 'none';
+                            pageInput.previousElementSibling.style.display = 'none';
+                            return;
+                        }
+                    }
+                    // fallback ke pagination
+                    const initialPage = getPageFromUrl();
+                    await displayVideos(initialPage, false);
+
+                } else {
+                    gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
+                }
+            })
+            .catch(error => {
+                console.error('❌ Gagal memuat vip.json:', error);
+                gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file vip.json ada.</p>';
+            });
+
+        // Mobile menu
+        const menuButton = document.getElementById('menuButton');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuIcon = document.getElementById('menuIcon');
+
+        menuButton.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+            if (mobileMenu.classList.contains('hidden')) {
+                menuIcon.classList.remove('fa-times');
+                menuIcon.classList.add('fa-bars');
+            } else {
+                menuIcon.classList.remove('fa-bars');
+                menuIcon.classList.add('fa-times');
+            }
+        });
+    </script>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+        // Firebase Config (SAMA dengan login.html)
+        const firebaseConfig = {
+            apiKey: "AIzaSyC6FRm5sJWg7osypawXEDzG-vUk8fUT1Nk",
+            authDomain: "videy-18688.firebaseapp.com",
+            projectId: "videy-18688",
+            storageBucket: "videy-18688.firebasestorage.app",
+            messagingSenderId: "749057914790",
+            appId: "1:749057914790:web:badec008f1d0c5a5080167",
+            measurementId: "G-YQ7TM65L8F"
+        };
+
+        // Init
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+
+        // Dapatkan elemen navigasi
+        const navUser = document.getElementById("navUser");
+        const navGuest = document.getElementById("navGuest");
+        const mobileUser = document.getElementById("mobileUser");
+        const mobileGuest = document.getElementById("mobileGuest");
+
+        // ============================
+        // VALIDASI LOGIN DI DASHBOARD
+        // ============================
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Pengguna SUDAH LOGIN
+
+                // 1. Tampilkan Navigasi User, Sembunyikan Navigasi Guest (Desktop)
+                navUser.classList.remove("hidden");
+                navUser.classList.add("flex");
+                navGuest.classList.add("hidden");
+
+                // 2. Tampilkan Navigasi User, Sembunyikan Navigasi Guest (Mobile)
+                mobileUser.classList.remove("hidden");
+                mobileUser.classList.add("space-y-3"); // Tambahkan class untuk layout mobile
+                mobileGuest.classList.add("hidden");
+
+                // 3. Update data user (Desktop)
+                document.getElementById("userNameDesktop").innerText = user.displayName || "User VIP";
+                document.getElementById("userEmailDesktop").innerText = user.email;
+                document.getElementById("userPhotoDesktop").src = user.photoURL || 'https://via.placeholder.com/150/6366F1/FFFFFF?text=VIP'; // Placeholder jika foto tidak ada
+
+                // 4. Update data user (Mobile)
+                document.getElementById("userNameMobile").innerText = user.displayName || "User VIP";
+                document.getElementById("userEmailMobile").innerText = user.email;
+                document.getElementById("userPhotoMobile").src = user.photoURL || 'https://via.placeholder.com/150/6366F1/FFFFFF?text=VIP';
+
+            } else {
+                // Pengguna BELUM LOGIN / LOGOUT
+
+                // 1. Sembunyikan Navigasi User, Tampilkan Navigasi Guest (Desktop)
+                navUser.classList.add("hidden");
+                navUser.classList.remove("flex");
+                navGuest.classList.remove("hidden");
+
+                // 2. Sembunyikan Navigasi User, Tampilkan Navigasi Guest (Mobile)
+                mobileUser.classList.add("hidden");
+                mobileUser.classList.remove("space-y-3");
+                mobileGuest.classList.remove("hidden");
+
+                // Redirect ke halaman login karena ini laman VIP
+                window.location.href = "/login";
+            }
+        });
+
+        function showToast(message) {
+            const toast = document.getElementById('toastNotification');
+            const toastMsg = document.getElementById('toastMessage');
+
+            toastMsg.textContent = message;
+
+            // Tampilkan toast
+            toast.classList.remove('opacity-0', 'translate-y-full');
+            toast.classList.add('opacity-100', 'translate-y-0');
+
+            // Sembunyikan toast setelah 3 detik
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-full');
+            }, 3000);
+        }
+
+        // =============
+        // LOGOUT BUTTON
+        // =============
+        window.logoutNow = async () => {
+            // 1. Lakukan proses logout Firebase
+            await signOut(auth);
+            localStorage.removeItem("userToken");
+
+            // 2. Tampilkan Toast
+            // Panggil fungsi showToast dari script global.
+            if (typeof showToast === 'function') {
+                showToast("Anda sudah berhasil keluar (logout). Mengarahkan ke Galeri...");
+            } else {
+                // Fallback jika fungsi showToast gagal dimuat
+                alert("Anda sudah berhasil keluar (logout).");
+            }
+
+            // 3. Arahkan ke index.html setelah penundaan singkat (misalnya 1 detik)
+            // Ini memberi waktu bagi pengguna untuk melihat toast sebelum redirect.
+            setTimeout(() => {
+                window.location.href = "/";
+            }, 1000);
+
+            // Penting: Hentikan redirect default dari onAuthStateChanged jika ada
+            return;
+        };
+    </script>
 
 
 
