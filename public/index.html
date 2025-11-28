@@ -241,244 +241,278 @@
                 l.parentNode.insertBefore(s, l);
             })({})
     </script>
-    <script>
-        const gallery = document.getElementById('videoGallery');
-        const paginationContainer = document.getElementById('paginationContainer');
-        const infoPaginasi = document.getElementById('infoPaginasi');
-        const pageInput = document.getElementById('pageInput');
-        const goToPageButton = document.getElementById('goToPageButton');
+   <script>
+const gallery = document.getElementById('videoGallery');
+const paginationContainer = document.getElementById('paginationContainer');
+const infoPaginasi = document.getElementById('infoPaginasi');
+const pageInput = document.getElementById('pageInput');
+const goToPageButton = document.getElementById('goToPageButton');
 
-        const VIDEOS_PER_PAGE = 8;
-        const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
+const VIDEOS_PER_PAGE = 8;
+const AD_TAG_URL_REDIRECT = 'https://fastblow.com/bC3XV_0/P.3ApNvobPm-VFJuZ/D/0I2qN/jLkY5GM/zsMZ4fLeTRYl2QOnTnkSzVMazxkj';
+let allVideos = [];
+let currentPage = 1;
 
-        let allVideos = [];
-        let currentPage = 1;
+// Fungsi iklan
+function triggerRedirectAd() {
+    const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
+    if (newWindow) { newWindow.blur(); window.focus(); }
+}
 
-        // Fungsionalitas Iklan: TIDAK BERUBAH
-        function triggerRedirectAd() {
-            const newWindow = window.open(AD_TAG_URL_REDIRECT, '_blank');
-            if (newWindow) { newWindow.blur(); window.focus(); }
-        }
+// Fungsi durasi video
+function getDurationFromVideo(videoUrl) {
+    return new Promise((resolve, reject) => {
+        const videoElement = document.createElement('video');
+        videoElement.preload = 'metadata';
+        videoElement.crossOrigin = 'anonymous';
+        videoElement.onloadedmetadata = function () {
+            const minutes = Math.ceil(videoElement.duration / 60);
+            resolve(minutes);
+        };
+        videoElement.onerror = function () { reject('?'); };
+        videoElement.src = videoUrl;
+    });
+}
 
-        // Fungsionalitas Durasi: TIDAK BERUBAH
-        function getDurationFromVideo(videoUrl) {
-            return new Promise((resolve, reject) => {
-                const videoElement = document.createElement('video');
+// === Fungsi Dekripsi Thumbnail AES-GCM ===
+async function decryptThumbnail(encrypted) {
+    try {
+        const ciphertext = Uint8Array.from(atob(encrypted.ciphertext), c => c.charCodeAt(0));
+        const nonce = Uint8Array.from(atob(encrypted.nonce), c => c.charCodeAt(0));
+        const tag = Uint8Array.from(atob(encrypted.tag), c => c.charCodeAt(0));
+        const keyBytes = Uint8Array.from(atob(encrypted.key), c => c.charCodeAt(0));
 
-                videoElement.preload = 'metadata';
-                videoElement.crossOrigin = 'anonymous';
+        const cipherPlusTag = new Uint8Array(ciphertext.length + tag.length);
+        cipherPlusTag.set(ciphertext);
+        cipherPlusTag.set(tag, ciphertext.length);
 
-                videoElement.onloadedmetadata = function () {
-                    window.URL.revokeObjectURL(videoUrl);
-                    const minutes = Math.ceil(videoElement.duration / 60);
-                    resolve(minutes);
-                };
+        const cryptoKey = await crypto.subtle.importKey(
+            "raw",
+            keyBytes,
+            { name: "AES-GCM" },
+            false,
+            ["decrypt"]
+        );
 
-                videoElement.onerror = function () {
-                    reject('?');
-                };
+        const decrypted = await crypto.subtle.decrypt(
+            { name: "AES-GCM", iv: nonce },
+            cryptoKey,
+            cipherPlusTag
+        );
 
-                videoElement.src = videoUrl;
-            });
-        }
+        const blob = new Blob([decrypted], { type: 'image/jpeg' });
+        return URL.createObjectURL(blob);
 
-        // Fungsionalitas Pembuatan Kartu Video: Diperbarui class CSS
-        function createVideoCard(videoData, index) {
-            const card = document.createElement('a');
+    } catch (err) {
+        console.error("Gagal dekripsi thumbnail:", err);
+        return null;
+    }
+}
 
-            card.href = `play.html?id=${videoData.id}`;
-            // LOGIC IKLAN ASLI: IKLAN TIDAK ADA DI KLIK KARTU VIDEO
-            // card.addEventListener('click', (e) => { triggerRedirectAd(); }); // DIHAPUS
+// Buat kartu video
+async function createVideoCard(videoData, index) {
+    const card = document.createElement('a');
+    card.href = `play?id=${videoData.id}`;
+    card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
+    card.style.animationDelay = `${index * 0.08}s`;
 
-            card.className = 'group bg-card-dark rounded-xl shadow-lg hover:shadow-2xl hover:scale-[1.03] transition-all duration-300 ease-in-out cursor-pointer animate-fadeIn border border-gray-800';
-            card.style.animationDelay = `${index * 0.08}s`; // Delay animasi sedikit diperlambat
+    let thumbnailUrl = null;
+    if (videoData.thumbnail_encrypted) {
+        thumbnailUrl = await decryptThumbnail(videoData.thumbnail_encrypted);
+        console.log(`Thumbnail terdekripsi untuk video ID ${videoData.id}:`, thumbnailUrl);
+    }
+    if (!thumbnailUrl) thumbnailUrl = videoData.url + '#t=1';
 
-            // HTML Kartu Diperbarui
-            card.innerHTML = `
-                <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
-                    <video 
-                        src="${videoData.url}" 
-                        preload="metadata" 
-                        class="absolute top-0 left-0 w-full h-full object-cover"
-                        muted
-                        playsinline>
-                        Browser Anda tidak mendukung tag video.
-                    </video>
-                    
-                    <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
-                        bg-black/40 opacity-0 group-hover:opacity-100 
-                        transition-opacity duration-300">
-                        <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
-                    </div>
-                </div>
-                <div class="p-4 text-left">
-                    <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${videoData.title}</h3>
-                    <div class="text-xs text-gray-500 mt-1 flex items-center">
-                        <i class="far fa-clock mr-1 text-accent"></i> <span class="font-medium">${videoData.duration || '?'} menit</span>
-                    </div>
-                </div>
-            `;
+    card.innerHTML = `
+        <div class="relative video-aspect-ratio bg-gray-900 flex items-center justify-center rounded-t-xl overflow-hidden"> 
+            <video 
+                src="${videoData.url}" 
+                preload="metadata" 
+                class="absolute top-0 left-0 w-full h-full object-cover"
+                muted
+                playsinline
+                poster="${thumbnailUrl}">
+            </video>
+            <div class="absolute inset-0 z-10 flex items-center justify-center cursor-pointer 
+                bg-black/40 opacity-0 group-hover:opacity-100 
+                transition-opacity duration-300">
+                <i class="fas fa-play text-white text-3xl p-4 rounded-full bg-accent/90 group-hover:bg-accent transition transform group-hover:scale-110 shadow-lg shadow-accent/50"></i>
+            </div>
+        </div>
+        <div class="p-4 text-left">
+            <h3 class="text-base font-bold text-white truncate group-hover:text-accent transition">${videoData.title}</h3>
+            <div class="text-xs text-gray-500 mt-1 flex items-center">
+                <i class="far fa-clock mr-1 text-accent"></i> 
+                <span class="font-medium">${videoData.durasi || '?'} menit</span>
+            </div>
+        </div>
+    `;
+    return card;
+}
 
+// === Display Video (Async) ===
+async function displayVideos(page, updateUrl = true) {
+    const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
+    if (page < 1) page = 1;
+    if (page > totalPages) page = totalPages;
 
-            // Logika Durasi: TIDAK BERUBAH
-            getDurationFromVideo(videoData.url)
-                .then(duration => {
-                    const durationElement = card.querySelector(`#duration-${videoData.id}`);
-                    if (durationElement) {
-                        durationElement.textContent = `${duration} menit`;
-                    }
-                })
-                .catch(error => {
-                    const durationElement = card.querySelector(`#duration-${videoData.id}`);
-                    if (durationElement) {
-                        durationElement.textContent = `? menit`;
-                    }
-                });
+    currentPage = page;
+    gallery.innerHTML = '';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
 
-            return card;
-        }
+    const startIndex = (page - 1) * VIDEOS_PER_PAGE;
+    const endIndex = startIndex + VIDEOS_PER_PAGE;
+    const videosOnPage = allVideos.slice(startIndex, endIndex);
 
-        // Fungsionalitas Display Videos: TIDAK BERUBAH
-        function displayVideos(page, updateUrl = true) {
-            const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
+    for (let i = 0; i < videosOnPage.length; i++) {
+        const card = await createVideoCard(videosOnPage[i], i);
+        gallery.appendChild(card);
+    }
 
-            if (page < 1) page = 1;
-            if (page > totalPages) page = totalPages;
+    renderPagination(totalPages);
 
-            currentPage = page;
-            gallery.innerHTML = '';
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+    infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, allVideos.length)} dari ${allVideos.length} video. (Halaman ${currentPage} dari ${totalPages})`;
+    pageInput.value = currentPage;
+    pageInput.max = totalPages;
 
-            const startIndex = (page - 1) * VIDEOS_PER_PAGE;
-            const endIndex = startIndex + VIDEOS_PER_PAGE;
-            const videosOnPage = allVideos.slice(startIndex, endIndex);
+    if (updateUrl) {
+        const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
+        window.history.pushState({ path: newUrl }, '', newUrl);
+    }
+}
 
-            videosOnPage.forEach((v, index) => {
-                const card = createVideoCard(v, index);
-                gallery.appendChild(card);
-            });
+// === Pagination ===
+function renderPagination(totalPages) {
+    paginationContainer.innerHTML = '';
+    if (totalPages <= 1) return;
 
-            renderPagination(totalPages);
+    const prevButton = createPaginationButton('<i class="fas fa-angle-left"></i>', currentPage - 1, currentPage === 1);
+    paginationContainer.appendChild(prevButton);
 
-            infoPaginasi.textContent = `Menampilkan ${startIndex + 1}-${Math.min(endIndex, allVideos.length)} dari ${allVideos.length} video. (Halaman ${currentPage} dari ${totalPages})`;
-            pageInput.value = currentPage;
-            pageInput.max = totalPages;
+    let startPage = Math.max(1, currentPage - 1);
+    let endPage = Math.min(totalPages, currentPage + 1);
+    if (currentPage === 1 && totalPages >= 3) { endPage = 3; }
+    else if (currentPage === totalPages && totalPages >= 3) { startPage = totalPages - 2; }
+    else if (totalPages < 3) { startPage = 1; endPage = totalPages; }
 
-            if (updateUrl) {
-                const newUrl = `${window.location.pathname}?page=${currentPage}${window.location.hash}`;
-                window.history.pushState({ path: newUrl }, '', newUrl);
-            }
-        }
+    for (let i = startPage; i <= endPage; i++) {
+        const pageButton = createPaginationButton(i, i, i === currentPage);
+        paginationContainer.appendChild(pageButton);
+    }
 
-        // Fungsionalitas Render Pagination: Diperbarui class CSS
-        function renderPagination(totalPages) {
-            paginationContainer.innerHTML = '';
-            if (totalPages <= 1) return;
+    const nextButton = createPaginationButton('<i class="fas fa-angle-right"></i>', currentPage + 1, currentPage === totalPages);
+    paginationContainer.appendChild(nextButton);
+}
 
-            const prevButton = createPaginationButton('<i class="fas fa-angle-left"></i>', currentPage - 1, currentPage === 1);
-            paginationContainer.appendChild(prevButton);
+function createPaginationButton(text, pageNumber, isActive = false) {
+    const button = document.createElement('button');
+    button.innerHTML = text;
 
-            let startPage = Math.max(1, currentPage - 1);
-            let endPage = Math.min(totalPages, currentPage + 1);
-            if (currentPage === 1 && totalPages >= 3) { endPage = 3; }
-            else if (currentPage === totalPages && totalPages >= 3) { startPage = totalPages - 2; }
-            else if (totalPages < 3) { startPage = 1; endPage = totalPages; }
-            if (startPage < 1) startPage = 1;
-            if (endPage > totalPages) endPage = totalPages;
+    const baseClasses = 'w-10 h-10 rounded-full font-semibold transition duration-200 flex items-center justify-center text-sm shadow-md';
 
-            for (let i = startPage; i <= endPage; i++) {
-                const pageButton = createPaginationButton(i, i, i === currentPage);
-                paginationContainer.appendChild(pageButton);
-            }
+    if (isActive) {
+        button.className = `${baseClasses} bg-accent text-white ring-2 ring-indigo-300/50`;
+    } else if (pageNumber < 1 || pageNumber > Math.ceil(allVideos.length / VIDEOS_PER_PAGE)) {
+        button.className = `${baseClasses} bg-gray-800 text-gray-600 cursor-not-allowed`;
+        button.disabled = true;
+    } else {
+        button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:text-white`;
+        button.onclick = () => displayVideos(pageNumber);
+    }
+    return button;
+}
 
-            const nextButton = createPaginationButton('<i class="fas fa-angle-right"></i>', currentPage + 1, currentPage === totalPages);
-            paginationContainer.appendChild(nextButton);
-        }
+// Ambil page dan id dari URL
+function getPageFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const pageParam = urlParams.get('page');
+    const pageNumber = parseInt(pageParam);
+    return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
+}
 
-        // Fungsionalitas Create Pagination Button: Diperbarui class CSS
-        function createPaginationButton(text, pageNumber, isActive = false) {
-            const button = document.createElement('button');
-            button.innerHTML = text;
+function getIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const idParam = urlParams.get('id');
+    const videoId = parseInt(idParam);
+    return (!isNaN(videoId) && videoId >= 0) ? videoId : null;
+}
 
-            const baseClasses = 'w-10 h-10 rounded-full font-semibold transition duration-200 flex items-center justify-center text-sm shadow-md';
+// Go To Page
+function goToPageFromInput() {
+    triggerRedirectAd();
+    let page = parseInt(pageInput.value);
+    const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
+    if (isNaN(page) || page < 1) page = 1;
+    else if (page > totalPages) page = totalPages;
+    displayVideos(page);
+}
 
-            if (isActive) {
-                button.className = `${baseClasses} bg-accent text-white ring-2 ring-indigo-300/50`;
-            } else if (pageNumber < 1 || pageNumber > Math.ceil(allVideos.length / VIDEOS_PER_PAGE)) {
-                button.className = `${baseClasses} bg-gray-800 text-gray-600 cursor-not-allowed`;
-                button.disabled = true;
-            } else {
-                button.className = `${baseClasses} bg-gray-700 border border-gray-600 text-gray-200 hover:bg-gray-600 hover:text-white`;
-                button.onclick = () => {
-                    // LOGIC IKLAN ASLI: IKLAN TIDAK ADA DI KLIK PAGINASI
-                    // triggerRedirectAd(); // DIHAPUS 
-                    displayVideos(pageNumber);
-                };
-            }
-            return button;
-        }
+goToPageButton.addEventListener('click', goToPageFromInput);
+pageInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { triggerRedirectAd(); goToPageFromInput(); }
+});
 
-        // Fungsionalitas Get Page From URL: TIDAK BERUBAH
-        function getPageFromUrl() {
-            const urlParams = new URLSearchParams(window.location.search);
-            const pageParam = urlParams.get('page');
-            const pageNumber = parseInt(pageParam);
-            return (pageNumber > 0 && !isNaN(pageNumber)) ? pageNumber : 1;
-        }
+// Load JSON dan tampilkan video
+fetch('videos.json')
+    .then(res => res.json())
+    .then(async data => {
+        console.log('✅ Data JSON berhasil diambil:', data);
 
-        // Fungsionalitas Go To Page: LOGIC IKLAN DIPERTAHANKAN
-        function goToPageFromInput() {
-            // LOGIC IKLAN ASLI: IKLAN DIPERTAHANKAN PADA TOMBOL GO SAJA
-            triggerRedirectAd();
-            let page = parseInt(pageInput.value);
-            const totalPages = Math.ceil(allVideos.length / VIDEOS_PER_PAGE);
-            if (isNaN(page) || page < 1) { page = 1; }
-            else if (page > totalPages) { page = totalPages; }
-            displayVideos(page);
-        }
+        allVideos = data.videos.map(v => ({
+            ...v,
+            id: v.id // pakai id asli dari JSON
+        }));
+        console.log('🎬 Semua video setelah mapping:', allVideos);
 
-        goToPageButton.addEventListener('click', goToPageFromInput);
-        pageInput.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') { triggerRedirectAd(); goToPageFromInput(); }
-        });
+        if (allVideos.length > 0) {
+            const videoId = getIdFromUrl();
+            console.log('🔎 Video ID dari URL:', videoId);
 
+            if (videoId !== null) {
+                const video = allVideos.find(v => v.id === videoId);
+                console.log('🎯 Video yang dipilih:', video);
 
-        // --- LOAD DATA AWAL DARI videos.json - TIDAK BERUBAH ---
-        fetch('videos.json')
-            .then(res => res.json())
-            .then(data => {
-                allVideos = data.videos.map((v, index) => ({ ...v, id: index }));
-
-                if (allVideos && allVideos.length > 0) {
-                    const initialPage = getPageFromUrl();
-                    displayVideos(initialPage, false);
-                } else {
-                    gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
+                if (video) {
+                    gallery.innerHTML = '';
+                    const card = await createVideoCard(video, 0);
+                    gallery.appendChild(card);
+                    infoPaginasi.textContent = `Menampilkan video ID ${video.id} dari ${allVideos.length}`;
+                    paginationContainer.innerHTML = ''; // sembunyikan pagination
+                    return;
                 }
-            })
-            .catch(error => {
-                console.error('Gagal memuat videos.json:', error);
-                gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file videos.json ada.</p>';
-            });
-
-        const menuButton = document.getElementById('menuButton');
-        const mobileMenu = document.getElementById('mobileMenu');
-        const menuIcon = document.getElementById('menuIcon');
-
-        menuButton.addEventListener('click', () => {
-            // Toggle (sembunyikan/tampilkan) menu
-            mobileMenu.classList.toggle('hidden');
-
-            // Ganti ikon hamburger <-> close
-            if (mobileMenu.classList.contains('hidden')) {
-                menuIcon.classList.remove('fa-times'); // Ikon Close
-                menuIcon.classList.add('fa-bars'); // Ikon Hamburger
-            } else {
-                menuIcon.classList.remove('fa-bars');
-                menuIcon.classList.add('fa-times');
             }
-        });
-    </script>
+            // fallback ke pagination
+            const initialPage = getPageFromUrl();
+            await displayVideos(initialPage, false);
+
+        } else {
+            gallery.innerHTML = '<p class="text-center col-span-full mt-10 text-xl text-gray-400">Tidak ada video ditemukan.</p>';
+        }
+    })
+    .catch(error => {
+        console.error('❌ Gagal memuat vip.json:', error);
+        gallery.innerHTML = '<p class="text-red-400 text-center col-span-full mt-10">Gagal memuat data video. Pastikan file vip.json ada.</p>';
+    });
+
+// Mobile menu
+const menuButton = document.getElementById('menuButton');
+const mobileMenu = document.getElementById('mobileMenu');
+const menuIcon = document.getElementById('menuIcon');
+
+menuButton.addEventListener('click', () => {
+    mobileMenu.classList.toggle('hidden');
+    if (mobileMenu.classList.contains('hidden')) {
+        menuIcon.classList.remove('fa-times');
+        menuIcon.classList.add('fa-bars');
+    } else {
+        menuIcon.classList.remove('fa-bars');
+        menuIcon.classList.add('fa-times');
+    }
+});
+</script>
+
+
+
     <script type='text/javascript'
         src='//sardineoctoberconnecting.com/5b/9b/7a/5b9b7a7dab949f5559d8fce454ac6f09.js'></script>
 </body>
